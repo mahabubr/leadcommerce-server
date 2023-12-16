@@ -1,0 +1,1 @@
+Fri Jun 16 2023:1:6:58 __ [CH] error: Invalid scheme, expected connection string to start with "mongodb://" or "mongodb+srv://"

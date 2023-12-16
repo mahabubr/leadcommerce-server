@@ -1,0 +1,35 @@
+{
+  "keep": {
+    "days": true,
+    "amount": 14
+  },
+  "auditLog": "C:\\projects\\level-two\\digital-cow-hut\\logs\\winston\\errors\\.dac402c917ed4b45f26f32a3cbfa5fa688ffc3fc-audit.json",
+  "files": [
+    {
+      "date": 1686853896564,
+      "name": "C:\\projects\\level-two\\digital-cow-hut\\logs\\winston\\errors\\CU-00-16-06-2023-error.log",
+      "hash": "f092f3700ed5a4443eda094988ecb21bc05862d2fb1e05a86b7d7f5177e00b5a"
+    },
+    {
+      "date": 1686855600886,
+      "name": "C:\\projects\\level-two\\digital-cow-hut\\logs\\winston\\errors\\CU-01-16-06-2023-error.log",
+      "hash": "ccd1c78c4771bff15b46cbed561b1c91e5868a323bf215d75888de4875e0756e"
+    },
+    {
+      "date": 1686896884618,
+      "name": "C:\\projects\\level-two\\digital-cow-hut\\logs\\winston\\errors\\CU-12-16-06-2023-error.log",
+      "hash": "173c010a7039f6d2144ac739e7b32efa5a6c80e8ddac60cb396909b1931709c4"
+    },
+    {
+      "date": 1686905064723,
+      "name": "C:\\projects\\level-two\\digital-cow-hut\\logs\\winston\\errors\\CU-14-16-06-2023-error.log",
+      "hash": "94727a6df5e3ab9b7090410d1c90199467debc6733bea75395c1d45f5a89ceba"
+    },
+    {
+      "date": 1686906006726,
+      "name": "C:\\projects\\level-two\\digital-cow-hut\\logs\\winston\\errors\\CU-15-16-06-2023-error.log",
+      "hash": "07d16aaf56e740d2e2da29757b5b83c7208bae7e54c27b774714c1cb69bf67f4"
+    }
+  ],
+  "hashType": "sha256"
+}
