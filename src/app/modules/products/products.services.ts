@@ -7,6 +7,12 @@ const createProduct = async (payload: IProducts): Promise<IProducts | null> => {
   return result;
 };
 
+// * get single product
+const getSingleProduct = async (id: string): Promise<IProducts | null> => {
+  const result = await Products.findById(id);
+  return result;
+};
+
 // * update single product
 const updateProduct = async (
   id: string,
@@ -29,4 +35,5 @@ export const ProductsServices = {
   createProduct,
   updateProduct,
   deleteProduct,
+  getSingleProduct,
 };
