@@ -1,7 +1,10 @@
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
+import { paginationFields } from '../../../constants/paginationConstants';
 import catAsync from '../../../shared/catchAsync';
+import pick from '../../../shared/pick';
 import sendResponse from '../../../shared/sendResponse';
+import { ProductFilterableFields } from './products.constant';
 import { IProducts } from './products.interface';
 import { ProductsServices } from './products.services';
 
@@ -16,6 +19,25 @@ const createProduct = catAsync(async (req: Request, res: Response) => {
     success: true,
     message: 'Product created successfully',
     data: result,
+  });
+});
+
+// * get all product
+const getAllProducts = catAsync(async (req: Request, res: Response) => {
+  const filters = pick(req.query, ProductFilterableFields);
+  const paginationOptions = pick(req.query, paginationFields);
+
+  const result = await ProductsServices.getAllProducts(
+    filters,
+    paginationOptions
+  );
+
+  sendResponse<IProducts[]>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Products retrieved successfully',
+    meta: result?.meta,
+    data: result?.data,
   });
 });
 
@@ -62,6 +84,7 @@ const deleteProduct = catAsync(async (req: Request, res: Response) => {
 
 export const ProductsController = {
   createProduct,
+  getAllProducts,
   updateProduct,
   deleteProduct,
   getSingleProduct,

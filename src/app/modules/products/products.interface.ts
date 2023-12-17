@@ -18,4 +18,8 @@ export type IProducts = {
   productTags: string[];
   status: IProductStatus;
 };
+
+export type IProductsFilters = {
+  searchTerm: string;
+};
 export type ProductsModel = Model<IProducts, Record<string, unknown>>;
