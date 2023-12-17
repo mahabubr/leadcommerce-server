@@ -1,4 +1,6 @@
+import httpStatus from 'http-status';
 import { SortOrder } from 'mongoose';
+import ApiError from '../../../errors/ApiError';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IGenericResponse } from '../../../interfaces/common';
 import { IPaginationOptions } from '../../../interfaces/pagination';
@@ -15,7 +17,7 @@ const createProduct = async (payload: IProducts): Promise<IProducts | null> => {
 // * get all products
 
 const getAllProducts = async (
-  filters: Partial<IProductsFilters>, 
+  filters: Partial<IProductsFilters>,
   paginationOptions: IPaginationOptions
 ): Promise<IGenericResponse<IProducts[]>> => {
   const { searchTerm, ...filtersData } = filters;
@@ -79,6 +81,12 @@ const updateProduct = async (
   id: string,
   payload: Partial<IProducts>
 ): Promise<IProducts | null> => {
+  const isExist = await Products.findById(id);
+
+  if (!isExist) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'This user is not exist');
+  }
+
   const result = await Products.findOneAndUpdate({ _id: id }, payload, {
     new: true,
   });
@@ -88,6 +96,12 @@ const updateProduct = async (
 
 // * delete single product
 const deleteProduct = async (id: string): Promise<IProducts | null> => {
+  const isExist = await Products.findById(id);
+
+  if (!isExist) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'This user is not exist');
+  }
+
   const result = await Products.findByIdAndDelete(id);
   return result;
 };
