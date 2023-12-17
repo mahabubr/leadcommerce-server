@@ -1,30 +1,56 @@
 import { Schema, model } from 'mongoose';
+import { ProductStatus } from './products.constant';
 import { IProducts, ProductsModel } from './products.interface';
 
 const ProductsSchema = new Schema<IProducts, ProductsModel>({
-  title: {
+  image: {
     type: String,
     required: true,
   },
-  description: {
+  productName: {
     type: String,
     required: true,
   },
-  deliveryTime: {
+  categories: {
+    type: [String],
+    required: true,
+  },
+  slug: {
     type: String,
     required: true,
   },
-  inStocks: {
-    type: Boolean,
+  shortDescription: {
+    type: String,
+    required: true,
+  },
+  color: {
+    type: [String],
+    required: true,
+  },
+  size: {
+    type: [String],
     required: true,
   },
   price: {
     type: Number,
     required: true,
   },
+  quantity: {
+    type: Number,
+    required: true,
+  },
+  fullDetail: {
+    type: String,
+    required: true,
+  },
+  productTags: {
+    type: [String],
+    required: true,
+  },
   status: {
     type: String,
     required: true,
+    enum: ProductStatus,
   },
 });
 
