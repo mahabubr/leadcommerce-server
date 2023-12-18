@@ -41,6 +41,8 @@ export type IOrders = {
   user_id: Types.ObjectId; // vendor user_id
   order_code: string; // automatically generated should be unique
   order_product_list: IOrdersProductList[];
+  total_items: number;
+  total_quantity: number;
   amount: number;
   order_status: IOrderStatus;
   coupon_code: string;
