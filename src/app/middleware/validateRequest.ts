@@ -17,5 +17,7 @@ const validateRequest =
       next(error);
     }
   };
-
-export default validateRequest;
+  
+export const requestValidation = {
+  validateRequest,
+};
