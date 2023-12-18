@@ -100,7 +100,7 @@ const createOrder = async (payload: IOrdersReq): Promise<IOrders | null> => {
             quantity: isExistProduct.quantity - productQuantity,
           },
         },
-        { session, new: true }
+        { session }
       );
     }
 
@@ -121,10 +121,10 @@ const createOrder = async (payload: IOrdersReq): Promise<IOrders | null> => {
           shipment_address,
         },
       ],
-      { session, new: true }
+      { session }
     );
 
-    await session.abortTransaction();
+    await session.commitTransaction();
     await session.endSession();
 
     if (!result) {
