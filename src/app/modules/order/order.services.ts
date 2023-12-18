@@ -142,7 +142,7 @@ const createOrder = async (payload: IOrdersReq): Promise<IOrders | null> => {
   }
 };
 
-// * get all products
+// * get all Orders
 
 const getAllOrders = async (
   filters: Partial<IOrdersFilters>,
@@ -198,7 +198,7 @@ const getAllOrders = async (
   };
 };
 
-// * get single product
+// * get single Orders
 const getSingleOrder = async (id: string): Promise<IOrders | null> => {
   const result = await Orders.findById(id)
     .populate({
@@ -225,7 +225,7 @@ const updateOrder = async (
   id: string,
   payload: Partial<IOrders>
 ): Promise<IOrders | null> => {
-  const isExist = await Products.findById(id);
+  const isExist = await Orders.findById(id);
 
   if (!isExist) {
     throw new ApiError(httpStatus.NOT_FOUND, 'order is not found');
@@ -246,9 +246,22 @@ const updateOrder = async (
   return result;
 };
 
+// * delete single product
+const deleteOrder = async (id: string): Promise<IOrders | null> => {
+  const isExist = await Orders.findById(id);
+
+  if (!isExist) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Order not found');
+  }
+
+  const result = await Orders.findByIdAndDelete(id);
+  return result;
+};
+
 export const OrdersServices = {
   createOrder,
   getAllOrders,
   getSingleOrder,
   updateOrder,
+  deleteOrder,
 };

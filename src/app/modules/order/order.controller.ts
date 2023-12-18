@@ -51,8 +51,39 @@ const getSingleOrder = catAsync(async (req: Request, res: Response) => {
   });
 });
 
+// * update Order
+
+const updateOrder = catAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const updatedData = req.body;
+  const result = await OrdersServices.updateOrder(id, updatedData);
+
+  sendResponse<IOrders | null>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Order updated successfully',
+    data: result,
+  });
+});
+
+
+// * delete single Order
+const deleteOrder = catAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await OrdersServices.deleteOrder(id);
+
+  sendResponse<IOrders | null>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Orders deleted successfully',
+    data: result,
+  });
+});
+
 export const OrdersController = {
   createOrder,
   getAllOrders,
   getSingleOrder,
+  updateOrder,
+  deleteOrder,
 };
