@@ -57,11 +57,13 @@ const createOrder = async (payload: IOrdersReq): Promise<IOrders | null> => {
 
   //**[step-03] checking price calculation is right
   let total_price = 0;
+  let total_quantity = 0;
   for (const orderProduct of order_product_list) {
     const productPrice = orderProduct.product_price;
     const productQuantity = orderProduct.product_quantity;
 
     total_price += productPrice * productQuantity;
+    total_quantity += productQuantity;
   }
 
   if (total_price !== amount) {
@@ -113,6 +115,7 @@ const createOrder = async (payload: IOrdersReq): Promise<IOrders | null> => {
           order_code: order_code,
           order_product_list: order_product_list,
           total_items: order_product_list.length,
+          total_quantity,
           amount,
           total_amount: amount,
           shipment_address,
