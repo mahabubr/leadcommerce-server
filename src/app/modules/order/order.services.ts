@@ -220,8 +220,35 @@ const getSingleOrder = async (id: string): Promise<IOrders | null> => {
   return result;
 };
 
+// * update single Product
+const updateOrder = async (
+  id: string,
+  payload: Partial<IOrders>
+): Promise<IOrders | null> => {
+  const isExist = await Products.findById(id);
+
+  if (!isExist) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'order is not found');
+  }
+
+  const result = await Orders.findOneAndUpdate(
+    { _id: id },
+    {
+      $set: {
+        order_status: payload.order_status,
+      },
+    },
+    {
+      new: true,
+    }
+  );
+
+  return result;
+};
+
 export const OrdersServices = {
   createOrder,
   getAllOrders,
   getSingleOrder,
+  updateOrder,
 };
