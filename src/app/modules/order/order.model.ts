@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import { OrderStatus } from './order.constant';
+import { OrderStatus, PaymentStatus, ShipmentStatus } from './order.constant';
 import { IOrders, OrdersModel } from './order.interface';
 
 const OrdersSchema = new Schema<IOrders, OrdersModel>({
@@ -9,6 +9,7 @@ const OrdersSchema = new Schema<IOrders, OrdersModel>({
     ref: 'Route',
     required: true,
   },
+  order_code: { type: String, required: true, unique: true },
   order_product_list: [
     {
       product_id: {
@@ -33,7 +34,7 @@ const OrdersSchema = new Schema<IOrders, OrdersModel>({
   payment_id: { type: Schema.Types.ObjectId },
   payment_status: {
     type: String,
-    enum: ['pending', 'completed', 'canceled'],
+    enum: PaymentStatus,
     default: 'pending',
     required: true,
   },
@@ -42,7 +43,7 @@ const OrdersSchema = new Schema<IOrders, OrdersModel>({
   shipment_status: {
     type: String,
     default: 'pending',
-    enum: ['pending', 'completed', 'canceled'],
+    enum: ShipmentStatus,
     required: true,
   },
   shipment_date: { type: String },
