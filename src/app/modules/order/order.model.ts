@@ -29,7 +29,7 @@ const OrdersSchema = new Schema<IOrders, OrdersModel>({
     required: true,
   },
   coupon_code: { type: String },
-  coupon_discount: { type: Number, default: 0, required: true },
+  coupon_discount: { type: Number, default: 0 },
   total_amount: { type: Number, required: true },
   payment_id: { type: Schema.Types.ObjectId },
   payment_status: {
