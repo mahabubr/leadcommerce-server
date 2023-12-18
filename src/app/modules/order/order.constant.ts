@@ -16,10 +16,14 @@ export const ShipmentStatus: IShipmentStatus[] = [
   'canceled',
 ];
 
-export const OrderSearchableFields = ['OrderName', 'slug'];
+export const OrderSearchableFields = [
+  'payment_status',
+  'shipment_status',
+  'order_code',
+  'order_status',
+];
 export const OrderFilterableFields = [
-  'OrderName',
-  'searchTerm',
-  'price',
-  'quantity',
+  'total_items',
+  'total_quantity',
+  'total_amount',
 ];

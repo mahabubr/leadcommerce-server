@@ -1,8 +1,12 @@
 import httpStatus from 'http-status';
-import mongoose from 'mongoose';
+import mongoose, { SortOrder } from 'mongoose';
 import ApiError from '../../../errors/ApiError';
+import { paginationHelpers } from '../../../helpers/paginationHelper';
+import { IGenericResponse } from '../../../interfaces/common';
+import { IPaginationOptions } from '../../../interfaces/pagination';
 import { Products } from '../products/products.model';
-import { IOrders, IOrdersReq } from './order.interface';
+import { OrderSearchableFields } from './order.constant';
+import { IOrders, IOrdersFilters, IOrdersReq } from './order.interface';
 import { Orders } from './order.model';
 import { generatedOrderCode } from './order.utils';
 
@@ -138,6 +142,63 @@ const createOrder = async (payload: IOrdersReq): Promise<IOrders | null> => {
   }
 };
 
+// * get all products
+
+const getAllOrders = async (
+  filters: Partial<IOrdersFilters>,
+  paginationOptions: IPaginationOptions
+): Promise<IGenericResponse<IOrders[]>> => {
+  const { searchTerm, ...filtersData } = filters;
+  const { page, limit, skip, sortBy, sortOrder } =
+    paginationHelpers.calculatePagination(paginationOptions);
+
+  const andCondition = [];
+
+  if (searchTerm) {
+    andCondition.push({
+      $or: OrderSearchableFields.map(field => ({
+        [field]: {
+          $regex: searchTerm,
+          $options: 'i',
+        },
+      })),
+    });
+  }
+
+  if (Object.keys(filtersData).length) {
+    andCondition.push({
+      $and: Object.entries(filtersData).map(([field, value]) => ({
+        [field]: value,
+      })),
+    });
+  }
+
+  const sortCondition: { [key: string]: SortOrder } = {};
+
+  if (sortBy && sortOrder) {
+    sortCondition[sortBy] = sortOrder;
+  }
+
+  const whereCondition = andCondition.length > 0 ? { $and: andCondition } : {};
+
+  const result = await Orders.find(whereCondition)
+    .sort(sortCondition)
+    .skip(skip)
+    .limit(limit);
+
+  const total = await Orders.countDocuments(whereCondition);
+
+  return {
+    meta: {
+      page,
+      limit,
+      total,
+    },
+    data: result,
+  };
+};
+
 export const OrdersServices = {
   createOrder,
+  getAllOrders,
 };
