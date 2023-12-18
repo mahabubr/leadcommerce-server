@@ -2,6 +2,15 @@ import { Schema, model } from 'mongoose';
 import { OrderStatus, PaymentStatus, ShipmentStatus } from './order.constant';
 import { IOrders, OrdersModel } from './order.interface';
 
+const ShipmentAddressSchema = new Schema({
+  house_no: { type: String },
+  road_no: { type: String },
+  area: { type: String },
+  district: { type: String },
+  country: { type: String },
+});
+
+
 const OrdersSchema = new Schema<IOrders, OrdersModel>({
   buyer_id: { type: Schema.Types.ObjectId, default: null },
   user_id: {
@@ -46,6 +55,7 @@ const OrdersSchema = new Schema<IOrders, OrdersModel>({
     enum: ShipmentStatus,
     required: true,
   },
+  shipment_address: { type: ShipmentAddressSchema }, 
   shipment_date: { type: String },
 });
 

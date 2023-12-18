@@ -8,14 +8,14 @@ import { generatedOrderCode } from './order.utils';
 // * create Order
 const createOrder = async (payload: IOrdersReq): Promise<IOrders | null> => {
   // console.log(payload);
-  const { order_product_list, amount } = payload;
+  const { order_product_list, amount, shipment_address } = payload;
 
   /**
    ** [step-01] check same product product are listed in the db with id, price and quantity
    ** [step-02] coupon checking
    ** [step-03] checking price calculation is right
    ** [step-04] generate a order code
-   ** [step-05] create a order
+   ** [step-05] create a order and reduce product quantity from product table
    */
 
   //**[step-01] check same product product are listed in the db with id, price and quantity
@@ -69,7 +69,9 @@ const createOrder = async (payload: IOrdersReq): Promise<IOrders | null> => {
   //** [step-04] generate a order code
   const order_code = await generatedOrderCode(); // generated bus code
 
-  //** [step-05] create a order    // TODO: buyer and user_id is fake
+  //** [step-05] create a order and reduce product quantity from product table   
+  // TODO: buyer is fake
+  // TODO: user_id will be update from auth middleware data
 
   const result = await Orders.create({
     buyer_id: '657ff528bcc34f2ba044d717',
@@ -78,6 +80,7 @@ const createOrder = async (payload: IOrdersReq): Promise<IOrders | null> => {
     order_product_list: order_product_list,
     amount,
     total_amount: amount,
+    shipment_address,
   });
 
   if (!result) {

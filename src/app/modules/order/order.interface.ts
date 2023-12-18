@@ -7,6 +7,14 @@ export type IOrdersProductList = {
   product_price: number;
 };
 
+type shipment_address = {
+  house_no?: string;
+  road_no?: string;
+  area?: string;
+  district?: string;
+  country?: string;
+};
+
 /* orders request for buyer */
 export type IOrdersReq = {
   order_id: string;
@@ -16,6 +24,7 @@ export type IOrdersReq = {
   coupon_code: string;
   coupon_discount: 200; // default should be 0
   total_amount: number;
+  shipment_address?: shipment_address;
 };
 
 export type IOrdersFilters = {
@@ -42,6 +51,7 @@ export type IOrders = {
   payment_date?: string;
   shipment_id?: Types.ObjectId;
   shipment_status?: 'pending' | 'completed' | 'canceled';
+  shipment_address?: shipment_address;
   shipment_date?: string;
 };
 
