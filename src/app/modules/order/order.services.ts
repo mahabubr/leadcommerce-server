@@ -198,7 +198,30 @@ const getAllOrders = async (
   };
 };
 
+// * get single product
+const getSingleOrder = async (id: string): Promise<IOrders | null> => {
+  const result = await Orders.findById(id)
+    .populate({
+      path: 'user_id',
+      // select: 'from to distance',
+    })
+    .populate({
+      path: 'buyer_id',
+    })
+    .populate({
+      path: 'buyer_id',
+    })
+    .populate('payment_id')
+    .populate('shipment_id')
+    .populate({
+      path: 'order_product_list.product_id',
+      // select: '*',   // TODO: retrieved all products info/fields as the requirements
+    });
+  return result;
+};
+
 export const OrdersServices = {
   createOrder,
   getAllOrders,
+  getSingleOrder,
 };

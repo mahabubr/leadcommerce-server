@@ -38,7 +38,21 @@ const getAllOrders = catAsync(async (req: Request, res: Response) => {
   });
 });
 
+// * get single product
+const getSingleOrder = catAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await OrdersServices.getSingleOrder(id);
+
+  sendResponse<IOrders | null>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Order Fetched successfully',
+    data: result,
+  });
+});
+
 export const OrdersController = {
   createOrder,
   getAllOrders,
+  getSingleOrder,
 };

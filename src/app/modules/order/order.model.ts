@@ -15,7 +15,7 @@ const OrdersSchema = new Schema<IOrders, OrdersModel>(
     buyer_id: { type: Schema.Types.ObjectId, default: null },
     user_id: {
       type: Schema.Types.ObjectId,
-      ref: 'Route',
+      // ref: 'user_id',  // TODO: change to the vendor user_id
       required: true,
     },
     order_code: { type: String, required: true, unique: true },
@@ -42,7 +42,10 @@ const OrdersSchema = new Schema<IOrders, OrdersModel>(
     coupon_code: { type: String },
     coupon_discount: { type: Number, default: 0 },
     total_amount: { type: Number, required: true },
-    payment_id: { type: Schema.Types.ObjectId },
+    payment_id: {
+      type: Schema.Types.ObjectId,
+      // ref: 'Payments',  // TODO: change to the Payments table schema
+    },
     payment_status: {
       type: String,
       enum: PaymentStatus,
@@ -50,7 +53,10 @@ const OrdersSchema = new Schema<IOrders, OrdersModel>(
       required: true,
     },
     payment_date: { type: String },
-    shipment_id: { type: Schema.Types.ObjectId },
+    shipment_id: {
+      type: Schema.Types.ObjectId,
+      // ref: 'Shipments',  // TODO: change to the Shipments table schema
+    },
     shipment_status: {
       type: String,
       default: 'pending',
