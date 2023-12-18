@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "E:\\Leadcommerce\\leadcommerce-server\\logs\\winston\\successes\\.f87ef9cfec306f6b2d8ae26953357d810798fd36-audit.json",
+    "files": [
+        {
+            "date": 1702911159311,
+            "name": "E:\\Leadcommerce\\leadcommerce-server\\logs\\winston\\successes\\CU-20-18-12-2023-success.log",
+            "hash": "1aaf5a8acb1a8fac97a96f8fc67645d946f1dbe6c3f92fc7b89999da78f86e9f"
+        }
+    ],
+    "hashType": "sha256"
+}

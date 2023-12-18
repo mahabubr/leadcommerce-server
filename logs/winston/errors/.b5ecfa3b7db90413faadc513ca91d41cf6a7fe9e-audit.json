@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "E:\\Leadcommerce\\leadcommerce-server\\logs\\winston\\errors\\.b5ecfa3b7db90413faadc513ca91d41cf6a7fe9e-audit.json",
+    "files": [
+        {
+            "date": 1702911159325,
+            "name": "E:\\Leadcommerce\\leadcommerce-server\\logs\\winston\\errors\\CU-20-18-12-2023-error.log",
+            "hash": "875a51d9a367b5ebb45ebd0fdfc5681f23c6641959685c338a7a9e0e1d912dc6"
+        }
+    ],
+    "hashType": "sha256"
+}
