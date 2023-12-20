@@ -14,3 +14,12 @@ export type IStores = {
 };
 
 export type StoreModel = Model<IStores, Record<string, unknown>>;
+
+export type IStoreFilters = {
+  searchTerm: string;
+  name: string;
+  owner_name: string;
+  email: string;
+  contact_no: string;
+  location: string;
+};
