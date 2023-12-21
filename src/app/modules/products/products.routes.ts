@@ -1,9 +1,14 @@
 import express from 'express';
+import multer from '../../middleware/multer';
 import { ProductsController } from './products.controller';
 
 const router = express.Router();
 
-router.post('/', ProductsController.createProduct);
+router.post(
+  '/',
+  multer.single('image'),
+  ProductsController.createProduct
+);
 router.get('/', ProductsController.getAllProducts);
 router.get('/:id', ProductsController.getSingleProduct);
 router.put('/:id', ProductsController.updateProduct);
