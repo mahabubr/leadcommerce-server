@@ -4,7 +4,7 @@ import { paginationFields } from '../../../constants/paginationConstants';
 import catAsync from '../../../shared/catchAsync';
 import pick from '../../../shared/pick';
 import sendResponse from '../../../shared/sendResponse';
-import { StoreSearchableFields } from './store.constants';
+import { StoreFilterableFields } from './store.constants';
 import { IStores } from './store.interface';
 import { StoreServices } from './store.services';
 
@@ -23,7 +23,7 @@ const createStore = catAsync(async (req: Request, res: Response) => {
 
 // get multiple data from database
 const getAllStore = catAsync(async (req: Request, res: Response) => {
-  const filters = pick(req.query, StoreSearchableFields);
+  const filters = pick(req.query, StoreFilterableFields);
   const paginationOptions = pick(req.query, paginationFields);
   const result = await StoreServices.getAllStore(filters, paginationOptions);
 
@@ -32,7 +32,7 @@ const getAllStore = catAsync(async (req: Request, res: Response) => {
     success: true,
     message: 'Stores retrived successfully',
     meta: result?.meta,
-    data: result,
+    data: result?.data,
   });
 });
 

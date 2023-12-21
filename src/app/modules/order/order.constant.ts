@@ -4,7 +4,12 @@ import {
   IShipmentStatus,
 } from './order.interface';
 
-export const OrderStatus: IOrderStatus[] = ['pending', 'delivered', 'cancel'];
+export const OrderStatus: IOrderStatus[] = [
+  'pending',
+  'delivered',
+  'cancel',
+  'paused',
+];
 export const PaymentStatus: IPaymentStatus[] = [
   'pending',
   'completed',
@@ -14,6 +19,7 @@ export const ShipmentStatus: IShipmentStatus[] = [
   'pending',
   'completed',
   'canceled',
+  'paused',
 ];
 
 export const OrderSearchableFields = [
