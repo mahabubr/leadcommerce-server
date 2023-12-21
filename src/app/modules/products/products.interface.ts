@@ -5,11 +5,12 @@ export type IProductStatus = 'pending' | 'active' | 'restrict';
 // export type IProductsColor = 'red' | 'green' | 'yellow' | 'orange' | 'black';
 
 export type IProducts = {
-  image: string;
+  image?: { avatar?: string; avatar_public_url?: string };
   productName: string;
   categories: string[];
   slug: string;
-  shortDescription: string;
+  description: string;
+  fullDescription: string;
   color: string[];
   size: string[];
   price: number;

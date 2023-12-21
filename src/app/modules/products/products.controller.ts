@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
+import cloudinary from '../../../config/cloudinary';
 import { paginationFields } from '../../../constants/paginationConstants';
 import catAsync from '../../../shared/catchAsync';
 import pick from '../../../shared/pick';
@@ -12,6 +13,14 @@ import { ProductsServices } from './products.services';
 const createProduct = catAsync(async (req: Request, res: Response) => {
   const { ...productData } = req.body;
 
+  if (req.file) {
+    const uploadedImage = await cloudinary.uploader.upload(req.file?.path);
+    const avatar = {
+      avatar: uploadedImage.secure_url,
+      avatar_public_url: uploadedImage.public_id,
+    };
+    productData.image = avatar;
+  }
   const result = await ProductsServices.createProduct(productData);
 
   sendResponse<IProducts | null>(res, {
