@@ -71,7 +71,7 @@ const getAllCategory = async (
 
 // * get single Category
 const getSingleCategory = async (id: string): Promise<ICategory | null> => {
-    const result = await Category.findById(id);
+    const result = await Category.findOne({ _id: id });
     return result;
 };
 

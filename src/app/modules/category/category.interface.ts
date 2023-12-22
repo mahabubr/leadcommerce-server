@@ -1,9 +1,12 @@
-import { Model } from 'mongoose';
+import { Model, ObjectId } from 'mongoose';
 
 export type ICategoryStatus = 'active' | 'inactive';
 
 export type ICategory = {
+    _id?: string | ObjectId;
+    id: string | ObjectId;
     name: string;
+    desc?: string;
     status: ICategoryStatus;
 };
 
