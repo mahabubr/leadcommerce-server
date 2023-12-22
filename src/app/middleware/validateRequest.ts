@@ -10,6 +10,7 @@ const validateRequest =
         query: req.query,
         params: req.params,
         cookies: req.cookies,
+        url: req.url,
       });
 
       return next();
@@ -18,4 +19,6 @@ const validateRequest =
     }
   };
 
-export default validateRequest;
+export const requestValidation = {
+  validateRequest,
+};
