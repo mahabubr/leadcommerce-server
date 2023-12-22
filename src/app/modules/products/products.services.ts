@@ -84,7 +84,7 @@ const updateProduct = async (
   const isExist = await Products.findById(id);
 
   if (!isExist) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'This user is not exist');
+    throw new ApiError(httpStatus.NOT_FOUND, 'product is not exist');
   }
 
   const result = await Products.findOneAndUpdate({ _id: id }, payload, {

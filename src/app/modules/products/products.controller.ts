@@ -67,7 +67,17 @@ const getSingleProduct = catAsync(async (req: Request, res: Response) => {
 
 const updateProduct = catAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const updatedData = req.body;
+  const { ...updatedData } = req.body;
+
+  if (req.file) {
+    const uploadedImage = await cloudinary.uploader.upload(req.file?.path);
+    const avatar = {
+      avatar: uploadedImage.secure_url,
+      avatar_public_url: uploadedImage.public_id,
+    };
+    updatedData.image = avatar;
+  }
+
   const result = await ProductsServices.updateProduct(id, updatedData);
 
   sendResponse<IProducts | null>(res, {
