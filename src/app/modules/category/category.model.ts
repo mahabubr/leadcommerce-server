@@ -7,6 +7,9 @@ const CategorySchema = new Schema<ICategory, CategoryModel>(
             type: String,
             required: [true, 'category name filed is required'],
         },
+        desc: {
+            type: String,
+        },
         status: {
             type: String,
             enum: ["active", "inactive"],

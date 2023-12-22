@@ -34,7 +34,7 @@ const getAllCategory = catAsync(async (req: Request, res: Response) => {
     sendResponse<ICategory[]>(res, {
         statusCode: httpStatus.OK,
         success: true,
-        message: 'Category retrieved successfully',
+        message: 'Categories retrieved successfully',
         meta: result?.meta,
         data: result?.data,
     });
@@ -42,6 +42,7 @@ const getAllCategory = catAsync(async (req: Request, res: Response) => {
 
 // * get single Category
 const getSingleCategory = catAsync(async (req: Request, res: Response) => {
+
     const { id } = req.params;
     const result = await CategoryServices.getSingleCategory(id);
 
