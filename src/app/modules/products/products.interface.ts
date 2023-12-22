@@ -7,7 +7,7 @@ export type IProductStatus = 'pending' | 'active' | 'restrict';
 export type IProducts = {
   image: string;
   productName: string;
-  categories: string[];
+  categories: string;
   slug: string;
   shortDescription: string;
   color: string[];

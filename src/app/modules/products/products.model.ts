@@ -12,7 +12,7 @@ const ProductsSchema = new Schema<IProducts, ProductsModel>({
     required: true,
   },
   categories: {
-    type: [String],
+    type: String,
     required: true,
   },
   slug: {
