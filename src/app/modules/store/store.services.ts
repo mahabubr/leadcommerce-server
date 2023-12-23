@@ -5,16 +5,28 @@ import ApiError from '../../../errors/ApiError';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IGenericResponse } from '../../../interfaces/common';
 import { IPaginationOptions } from '../../../interfaces/pagination';
+import Admin from '../admin/admin.model';
+import Employe from '../employees/employees.model';
 import { StoreSearchableFields } from './store.constants';
 import { IStoreFilters, IStores } from './store.interface';
 import Store from './store.model';
 
 const createStore = async (payload: IStores): Promise<IStores> => {
+  const admin = await Admin.findOne({ email: payload.email });
+  const employee = await Employe.findOne({ email: payload.email });
   const store = await Store.findOne({ email: payload.email });
+
   // checking Email is already used or not
-  if (store) {
-    throw new ApiError(httpStatus.CONFLICT, 'Email is already used');
+  if (admin) {
+    throw new ApiError(httpStatus.CONFLICT, 'Admin is already used');
   }
+  if (employee) {
+    throw new ApiError(httpStatus.CONFLICT, 'Employee is already used');
+  }
+  if (store) {
+    throw new ApiError(httpStatus.CONFLICT, 'Store is already used');
+  }
+
   const {
     password,
     email,

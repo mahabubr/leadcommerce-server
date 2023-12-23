@@ -5,6 +5,8 @@ import ApiError from '../../../errors/ApiError';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IGenericResponse } from '../../../interfaces/common';
 import { IPaginationOptions } from '../../../interfaces/pagination';
+import Admin from '../admin/admin.model';
+import Store from '../store/store.model';
 import {
   EmployeSearchableFields,
   IEmploye,
@@ -13,11 +15,21 @@ import {
 import Employe from './employees.model';
 
 const createEmploye = async (payload: IEmploye): Promise<IEmploye> => {
-  const employe = await Employe.findOne({ email: payload.email });
+  const admin = await Admin.findOne({ email: payload.email });
+  const employee = await Employe.findOne({ email: payload.email });
+  const store = await Store.findOne({ email: payload.email });
+
   // checking Email is already used or not
-  if (employe) {
-    throw new ApiError(httpStatus.CONFLICT, 'Email is already used');
+  if (admin) {
+    throw new ApiError(httpStatus.CONFLICT, 'Admin is already used');
   }
+  if (employee) {
+    throw new ApiError(httpStatus.CONFLICT, 'Employee is already used');
+  }
+  if (store) {
+    throw new ApiError(httpStatus.CONFLICT, 'Store is already used');
+  }
+
   const { email, full_name, image, password, phone, position, shop_id } =
     payload;
 
