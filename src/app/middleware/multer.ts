@@ -9,6 +9,7 @@ export default multer({
   limits: {
     fileSize: 2000000,
   },
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   fileFilter: (_req: Request, file: any, cb: FileFilterCallback) => {
     const ext = path.extname(file.originalname);
     if (ext !== '.jpg' && ext !== '.jpeg' && ext !== '.png') {

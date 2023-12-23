@@ -1,5 +1,7 @@
 import bcrypt from 'bcrypt';
 import httpStatus from 'http-status';
+import { Secret } from 'jsonwebtoken';
+import config from '../../../config';
 import ApiError from '../../../errors/ApiError';
 import { JwtHelper } from '../../helpers/jwtHelpers';
 import Store from '../store/store.model';
@@ -24,7 +26,7 @@ const loginUser = async (payload: IAuth) => {
 
   const accessToken = JwtHelper.createToken(
     { id: isExist._id, email: isExist.email },
-    'Secret',
+    config.jwt.secret as Secret,
     '30d'
   );
 
@@ -34,10 +36,13 @@ const loginUser = async (payload: IAuth) => {
 };
 
 const refreshToken = async (token: { token: string }) => {
-  let verifyToken = JwtHelper.verifyToken(token.token, 'Secret');
+  let verifyToken;
 
   try {
-    verifyToken = JwtHelper.verifyToken(token.token, 'Secret');
+    verifyToken = JwtHelper.verifyToken(
+      token.token,
+      config.jwt.secret as Secret
+    );
   } catch (error) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Token not verified');
   }
@@ -54,7 +59,7 @@ const refreshToken = async (token: { token: string }) => {
 
   const accessToken = JwtHelper.createToken(
     { id: isExist._id, email: isExist.email },
-    'Secret',
+    config.jwt.secret as Secret,
     '5m'
   );
 

@@ -13,7 +13,6 @@ const createStore = async (payload: IStores): Promise<IStores> => {
   const store = await Store.findOne({ email: payload.email });
   // checking Email is already used or not
   if (store) {
-    console.log(store);
     throw new ApiError(httpStatus.CONFLICT, 'Email is already used');
   }
   const {
