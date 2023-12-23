@@ -31,9 +31,9 @@ export type IOrdersFilters = {
   searchTerm: string;
 };
 
-export type IOrderStatus = 'pending' | 'delivered' | 'cancel';
+export type IOrderStatus = 'pending' | 'delivered' | 'cancel' | 'paused';
 export type IPaymentStatus = 'pending' | 'completed' | 'canceled';
-export type IShipmentStatus = 'pending' | 'completed' | 'canceled';
+export type IShipmentStatus = 'pending' | 'completed' | 'canceled' | 'paused';
 
 /* orders */
 export type IOrders = {
