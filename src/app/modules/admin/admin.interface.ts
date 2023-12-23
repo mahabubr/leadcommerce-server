@@ -6,6 +6,7 @@ export type IAdmin = {
   email: string;
   phone: string;
   address: string;
+  password: string
 };
 
 export type AdminModel = Model<IAdmin, Record<string, unknown>>;

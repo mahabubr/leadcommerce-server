@@ -1,7 +1,7 @@
 import express from 'express';
 import { requestValidation } from '../../middleware/validateRequest';
-import { EmployeController } from './Employees.controller';
-import { EmployeValidation } from './Employees.validation';
+import { EmployeController } from './employees.controller';
+import { EmployeValidation } from './employees.validation';
 
 const router = express.Router();
 

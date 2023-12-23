@@ -1,5 +1,4 @@
 import express from 'express';
-import { EmployeRoutes } from '../modules/Employees/Employees.route';
 import { AdminRoutes } from '../modules/admin/admin.route';
 import { AuthRoutes } from '../modules/auth/auth.routes';
 import { CategoryRoutes } from '../modules/category/category.route';
@@ -8,6 +7,7 @@ import { PaymentRoutes } from '../modules/payment/payment.route';
 import { ProductsRoutes } from '../modules/products/products.routes';
 import { ShipmentRoutes } from '../modules/shipment/shipment.route';
 import { StoreRoutes } from '../modules/store/store.routes';
+import { EmployeRoutes } from '../modules/employees/employees.routes';
 
 const router = express.Router();
 

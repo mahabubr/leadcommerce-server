@@ -7,6 +7,7 @@ export type IEmploye = {
   shop_id: Schema.Types.ObjectId;
   email: string;
   phone: string;
+  password: string;
 };
 
 export type EmployeModel = Model<IEmploye, Record<string, unknown>>;

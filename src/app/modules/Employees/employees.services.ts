@@ -1,3 +1,4 @@
+import bcrypt from 'bcrypt';
 import httpStatus from 'http-status';
 import { SortOrder } from 'mongoose';
 import ApiError from '../../../errors/ApiError';
@@ -8,8 +9,8 @@ import {
   EmployeSearchableFields,
   IEmploye,
   IEmployeFilters,
-} from './Employees.interface';
-import Employe from './Employees.model';
+} from './employees.interface';
+import Employe from './employees.model';
 
 const createEmploye = async (payload: IEmploye): Promise<IEmploye> => {
   const employe = await Employe.findOne({ email: payload.email });
@@ -17,8 +18,22 @@ const createEmploye = async (payload: IEmploye): Promise<IEmploye> => {
   if (employe) {
     throw new ApiError(httpStatus.CONFLICT, 'Email is already used');
   }
+  const { email, full_name, image, password, phone, position, shop_id } =
+    payload;
 
-  const result = await Employe.create(payload);
+  const hash = await bcrypt.hash(password, 12);
+
+  const createPayload = {
+    email,
+    full_name,
+    image,
+    password: hash,
+    phone,
+    position,
+    shop_id,
+  };
+
+  const result = await Employe.create(createPayload);
   return result;
 };
 
@@ -59,7 +74,7 @@ const getAllEmploye = async (
   }
 
   const whereCondition = andCondition.length > 0 ? { $and: andCondition } : {};
-  console.log(whereCondition, searchTerm);
+
   const result = await Employe.find(whereCondition)
     .sort(sortCondition)
     .skip(skip)

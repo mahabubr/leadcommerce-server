@@ -1,5 +1,5 @@
 import { Schema, Types, model } from 'mongoose';
-import { EmployeModel, IEmploye } from './Employees.interface';
+import { EmployeModel, IEmploye } from './employees.interface';
 
 const EmployeSchema = new Schema<IEmploye>(
   {
@@ -8,11 +8,12 @@ const EmployeSchema = new Schema<IEmploye>(
     position: { type: String, required: true },
     shop_id: {
       type: Types.ObjectId,
-      ref: 'User',
+      ref: 'Store',
       required: true,
     },
     email: { type: String, required: true },
     phone: { type: String, required: true },
+    password: { type: String, required: true },
   },
   {
     timestamps: true,

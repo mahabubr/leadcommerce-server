@@ -1,3 +1,4 @@
+import bcrypt from 'bcrypt';
 import httpStatus from 'http-status';
 import { SortOrder } from 'mongoose';
 import ApiError from '../../../errors/ApiError';
@@ -15,7 +16,20 @@ const createAdmin = async (payload: IAdmin): Promise<IAdmin> => {
     throw new ApiError(httpStatus.CONFLICT, 'Email is already used');
   }
 
-  const result = await Admin.create(payload);
+  const { address, email, full_name, image, password, phone } = payload;
+
+  const hash = await bcrypt.hash(password, 12);
+
+  const createPayload = {
+    address,
+    email,
+    full_name,
+    image,
+    password: hash,
+    phone,
+  };
+
+  const result = await Admin.create(createPayload);
   return result;
 };
 
