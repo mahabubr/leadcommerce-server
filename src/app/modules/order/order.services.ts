@@ -13,7 +13,8 @@ import { generatedOrderCode } from './order.utils';
 // * create Order
 const createOrder = async (payload: IOrdersReq): Promise<IOrders | null> => {
   // console.log(payload);
-  const { order_product_list, amount, shipment_address } = payload;
+  const { order_product_list, amount, shipment_address, shipment_date } =
+    payload;
 
   /**
    ** [step-01] check same product product are listed in the db with id, price and quantity
@@ -43,15 +44,15 @@ const createOrder = async (payload: IOrdersReq): Promise<IOrders | null> => {
     }
 
     const isExistProduct = await Products.findById(productId);
-
     if (
       !isExistProduct ||
       isExistProduct.price !== productPrice ||
       isExistProduct.quantity < productQuantity
     ) {
+
       throw new ApiError(
         httpStatus.NOT_FOUND,
-        'request product details is not matching!'
+        'request product details is not matching! 🚀🚀🚀'
       );
     }
   }
@@ -74,7 +75,7 @@ const createOrder = async (payload: IOrdersReq): Promise<IOrders | null> => {
     throw new ApiError(httpStatus.NOT_FOUND, 'request amount is not matching!');
   }
 
-  //** [step-04] generate a order code
+  //** [step-04] genrate a order code
   const order_code = await generatedOrderCode(); // generated bus code
 
   //** [step-05]  [reduce product quantity from product table]/part-01 and [create a order]/part-02
@@ -97,6 +98,7 @@ const createOrder = async (payload: IOrdersReq): Promise<IOrders | null> => {
           'update time product is not found!'
         );
       }
+  
       await Products.findByIdAndUpdate(
         productId,
         {
@@ -123,6 +125,7 @@ const createOrder = async (payload: IOrdersReq): Promise<IOrders | null> => {
           amount,
           total_amount: amount,
           shipment_address,
+          shipment_date,
         },
       ],
       { session }
@@ -153,7 +156,6 @@ const getAllOrders = async (
     paginationHelpers.calculatePagination(paginationOptions);
 
   const andCondition = [];
-
   if (searchTerm) {
     andCondition.push({
       $or: OrderSearchableFields.map(field => ({
@@ -184,7 +186,7 @@ const getAllOrders = async (
   const result = await Orders.find(whereCondition)
     .sort(sortCondition)
     .skip(skip)
-    .limit(limit);
+    .limit(limit)
 
   const total = await Orders.countDocuments(whereCondition);
 

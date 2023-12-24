@@ -75,6 +75,11 @@ const getSingleProduct = async (id: string): Promise<IProducts | null> => {
   const result = await Products.findById(id);
   return result;
 };
+// * get single product
+const getAllStoreProduct = async (id: string): Promise<IProducts[] | null> => {
+  const result = await Products.find({ store_id: id });
+  return result;
+};
 
 // * update single product
 const updateProduct = async (
@@ -111,5 +116,6 @@ export const ProductsServices = {
   updateProduct,
   deleteProduct,
   getSingleProduct,
+  getAllStoreProduct,
   getAllProducts,
 };

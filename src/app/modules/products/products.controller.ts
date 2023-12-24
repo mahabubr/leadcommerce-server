@@ -62,6 +62,18 @@ const getSingleProduct = catAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+// * get all store product
+const getAllStoreProduct = catAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await ProductsServices.getAllStoreProduct(id);
+
+  sendResponse<IProducts[] | null>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Product Fetched successfully',
+    data: result,
+  });
+});
 
 // * update product
 
@@ -95,6 +107,7 @@ export const ProductsController = {
   createProduct,
   getAllProducts,
   updateProduct,
+  getAllStoreProduct,
   deleteProduct,
   getSingleProduct,
 };
