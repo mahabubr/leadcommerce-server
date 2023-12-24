@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import httpStatus from 'http-status';
 import { SortOrder } from 'mongoose';
 import ApiError from '../../../errors/ApiError';
@@ -9,7 +10,11 @@ import { IProducts, IProductsFilters } from './products.interface';
 import { Products } from './products.model';
 
 // * create product
-const createProduct = async (payload: IProducts): Promise<IProducts | null> => {
+const createProduct = async (
+  payload: IProducts,
+  storeId: any
+): Promise<IProducts | null> => {
+  payload.store_id = storeId;
   const result = await Products.create(payload);
   return result;
 };

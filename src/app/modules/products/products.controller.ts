@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import cloudinary from '../../../config/cloudinary';
 import { paginationFields } from '../../../constants/paginationConstants';
 import catAsync from '../../../shared/catchAsync';
@@ -12,6 +13,7 @@ import { ProductsServices } from './products.services';
 // * create product
 const createProduct = catAsync(async (req: Request, res: Response) => {
   const { ...productData } = req.body;
+  const decoded = jwt.decode(req.headers.authorization as string) as JwtPayload;
 
   if (req.file) {
     const uploadedImage = await cloudinary.uploader.upload(req.file?.path);
@@ -21,7 +23,7 @@ const createProduct = catAsync(async (req: Request, res: Response) => {
     };
     productData.image = avatar;
   }
-  const result = await ProductsServices.createProduct(productData);
+  const result = await ProductsServices.createProduct(productData, decoded.id);
 
   sendResponse<IProducts | null>(res, {
     statusCode: httpStatus.OK,
@@ -64,8 +66,8 @@ const getSingleProduct = catAsync(async (req: Request, res: Response) => {
 });
 // * get all store product
 const getAllStoreProduct = catAsync(async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const result = await ProductsServices.getAllStoreProduct(id);
+  const decoded = jwt.decode(req.headers.authorization as string) as JwtPayload;
+  const result = await ProductsServices.getAllStoreProduct(decoded.id);
 
   sendResponse<IProducts[] | null>(res, {
     statusCode: httpStatus.OK,
