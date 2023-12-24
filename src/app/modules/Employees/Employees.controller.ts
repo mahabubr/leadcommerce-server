@@ -40,8 +40,8 @@ const getAllEmploye = catAsync(async (req: Request, res: Response) => {
 });
 
 const getSingleEmploye = catAsync(async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const result = await EmployeServices.getSingleEmploye(id);
+  const decoded = jwt.decode(req.headers.authorization as string) as JwtPayload;
+  const result = await EmployeServices.getSingleEmploye(decoded.id);
 
   sendResponse<IEmploye | null>(res, {
     statusCode: httpStatus.OK,
