@@ -23,7 +23,8 @@ const createProduct = async (
 
 const getAllProducts = async (
   filters: Partial<IProductsFilters>,
-  paginationOptions: IPaginationOptions
+  paginationOptions: IPaginationOptions,
+  id: string
 ): Promise<IGenericResponse<IProducts[]>> => {
   const { searchTerm, ...filtersData } = filters;
   const { page, limit, skip, sortBy, sortOrder } =
@@ -56,7 +57,8 @@ const getAllProducts = async (
     sortCondition[sortBy] = sortOrder;
   }
 
-  const whereCondition = andCondition.length > 0 ? { $and: andCondition } : {};
+  const whereCondition =
+    andCondition.length > 0 ? { $and: andCondition } : { store_id: id };
 
   const result = await Products.find(whereCondition)
     .sort(sortCondition)

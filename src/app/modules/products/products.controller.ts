@@ -35,12 +35,14 @@ const createProduct = catAsync(async (req: Request, res: Response) => {
 
 // * get all product
 const getAllProducts = catAsync(async (req: Request, res: Response) => {
+  const decoded = jwt.decode(req.headers.authorization as string) as JwtPayload;
   const filters = pick(req.query, ProductFilterableFields);
   const paginationOptions = pick(req.query, paginationFields);
 
   const result = await ProductsServices.getAllProducts(
     filters,
-    paginationOptions
+    paginationOptions,
+    decoded.id
   );
 
   sendResponse<IProducts[]>(res, {
