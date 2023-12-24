@@ -6,7 +6,11 @@ import { CatregoryController } from './category.controller';
 const router = express.Router();
 
 router.post('/', auth(ENUM_ROLE.ADMIN), CatregoryController.createCategory);
-router.get('/', auth(ENUM_ROLE.ADMIN), CatregoryController.getAllCategory);
+router.get(
+  '/',
+  auth(ENUM_ROLE.ADMIN, ENUM_ROLE.STORE),
+  CatregoryController.getAllCategory
+);
 router.get(
   '/:id',
   auth(ENUM_ROLE.ADMIN),

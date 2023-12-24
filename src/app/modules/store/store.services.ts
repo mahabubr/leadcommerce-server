@@ -122,6 +122,13 @@ const getSingleStore = async (id: string): Promise<IStores | null> => {
   }
   return result;
 };
+const getStoreSingleStore = async (id: string): Promise<IStores | null> => {
+  const result = await Store.findById(id);
+  if (!result) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Store not found');
+  }
+  return result;
+};
 
 // * update single Product
 const updateStore = async (
@@ -165,4 +172,5 @@ export const StoreServices = {
   getSingleStore,
   updateStore,
   deleteStore,
+  getStoreSingleStore,
 };

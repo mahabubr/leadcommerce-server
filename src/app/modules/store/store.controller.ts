@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import { paginationFields } from '../../../constants/paginationConstants';
 import catAsync from '../../../shared/catchAsync';
 import pick from '../../../shared/pick';
@@ -48,6 +49,19 @@ const getSingleStore = catAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getStoreSingleStore = catAsync(async (req: Request, res: Response) => {
+  const decoded = jwt.decode(req.headers.authorization as string) as JwtPayload;
+
+  const result = await StoreServices.getStoreSingleStore(decoded.id);
+
+  sendResponse<IStores | null>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Store Fetched successfully',
+    data: result,
+  });
+});
+
 // * update Store
 
 const updateStore = catAsync(async (req: Request, res: Response) => {
@@ -82,4 +96,5 @@ export const StoreController = {
   getSingleStore,
   updateStore,
   deleteStore,
+  getStoreSingleStore,
 };

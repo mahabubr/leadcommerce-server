@@ -15,12 +15,18 @@ router.post(
 );
 // update store
 router.patch('/:id', auth(ENUM_ROLE.STORE), StoreController.updateStore);
+router.get(
+  '/single-store',
+  auth(ENUM_ROLE.STORE),
+  StoreController.getStoreSingleStore
+);
 // get single data from single Store
 router.get(
   '/:id',
   auth(ENUM_ROLE.ADMIN, ENUM_ROLE.EMPLOYEE, ENUM_ROLE.STORE),
   StoreController.getSingleStore
 );
+
 // delete store
 router.delete('/:id', auth(ENUM_ROLE.ADMIN), StoreController.deleteStore);
 // search and filter and get multiple data
