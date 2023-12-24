@@ -25,10 +25,13 @@ export const ShipmentStatus: IShipmentStatus[] = [
 export const OrderSearchableFields = [
   'payment_status',
   'shipment_status',
-  'order_code',
   'order_status',
+  'order_code',
 ];
 export const OrderFilterableFields = [
+  'searchTerm',
+  'order_code',
+  'order_status',
   'total_items',
   'total_quantity',
   'total_amount',

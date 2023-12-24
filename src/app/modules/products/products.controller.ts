@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import cloudinary from '../../../config/cloudinary';
 import { paginationFields } from '../../../constants/paginationConstants';
 import catAsync from '../../../shared/catchAsync';
@@ -12,6 +13,7 @@ import { ProductsServices } from './products.services';
 // * create product
 const createProduct = catAsync(async (req: Request, res: Response) => {
   const { ...productData } = req.body;
+  const decoded = jwt.decode(req.headers.authorization as string) as JwtPayload;
 
   if (req.file) {
     const uploadedImage = await cloudinary.uploader.upload(req.file?.path);
@@ -21,7 +23,7 @@ const createProduct = catAsync(async (req: Request, res: Response) => {
     };
     productData.image = avatar;
   }
-  const result = await ProductsServices.createProduct(productData);
+  const result = await ProductsServices.createProduct(productData, decoded.id);
 
   sendResponse<IProducts | null>(res, {
     statusCode: httpStatus.OK,
@@ -33,12 +35,14 @@ const createProduct = catAsync(async (req: Request, res: Response) => {
 
 // * get all product
 const getAllProducts = catAsync(async (req: Request, res: Response) => {
+  const decoded = jwt.decode(req.headers.authorization as string) as JwtPayload;
   const filters = pick(req.query, ProductFilterableFields);
   const paginationOptions = pick(req.query, paginationFields);
 
   const result = await ProductsServices.getAllProducts(
     filters,
-    paginationOptions
+    paginationOptions,
+    decoded.id
   );
 
   sendResponse<IProducts[]>(res, {
@@ -56,6 +60,18 @@ const getSingleProduct = catAsync(async (req: Request, res: Response) => {
   const result = await ProductsServices.getSingleProduct(id);
 
   sendResponse<IProducts | null>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Product Fetched successfully',
+    data: result,
+  });
+});
+// * get all store product
+const getAllStoreProduct = catAsync(async (req: Request, res: Response) => {
+  const decoded = jwt.decode(req.headers.authorization as string) as JwtPayload;
+  const result = await ProductsServices.getAllStoreProduct(decoded.id);
+
+  sendResponse<IProducts[] | null>(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: 'Product Fetched successfully',
@@ -105,6 +121,7 @@ export const ProductsController = {
   createProduct,
   getAllProducts,
   updateProduct,
+  getAllStoreProduct,
   deleteProduct,
   getSingleProduct,
 };

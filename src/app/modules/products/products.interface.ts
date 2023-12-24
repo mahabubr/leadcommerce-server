@@ -1,4 +1,4 @@
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 
 export type IProductStatus = 'pending' | 'active' | 'restrict';
 // export type IProductsSize = 'S' | 'M' | 'L' | 'XL' | 'XXL';
@@ -8,7 +8,7 @@ export type IProducts = {
   image?: { avatar?: string; avatar_public_url?: string };
   // new_image?: { avatar?: string; avatar_public_url?: string };
   productName: string;
-  categories: string[];
+  categories: string;
   slug: string;
   description: string;
   fullDescription: string;
@@ -19,6 +19,7 @@ export type IProducts = {
   fullDetail: string;
   productTags: string[];
   status: IProductStatus;
+  store_id: Types.ObjectId;
 };
 
 export type IProductsFilters = {

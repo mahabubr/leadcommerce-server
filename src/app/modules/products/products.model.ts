@@ -13,7 +13,7 @@ const ProductsSchema = new Schema<IProducts, ProductsModel>(
       required: true,
     },
     categories: {
-      type: [String],
+      type: String,
       required: true,
     },
     slug: {
@@ -53,6 +53,10 @@ const ProductsSchema = new Schema<IProducts, ProductsModel>(
       required: true,
       enum: ProductStatus,
       default: 'active',
+    },
+    store_id: {
+      type: Schema.Types.ObjectId,
+      // ref: 'Payments',  // TODO: change to the Payments table schema
     },
   },
   {

@@ -25,6 +25,7 @@ export type IOrdersReq = {
   coupon_discount: 200; // default should be 0
   total_amount: number;
   shipment_address?: shipment_address;
+  shipment_date?: string;
 };
 
 export type IOrdersFilters = {

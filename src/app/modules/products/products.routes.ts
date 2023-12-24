@@ -6,6 +6,7 @@ const router = express.Router();
 
 router.post('/', multer.single('image'), ProductsController.createProduct);
 router.get('/', ProductsController.getAllProducts);
+router.get('/my-product', ProductsController.getAllStoreProduct);
 router.get('/:id', ProductsController.getSingleProduct);
 router.put('/:id', multer.single('image'), ProductsController.updateProduct);
 router.delete('/:id', ProductsController.deleteProduct);
