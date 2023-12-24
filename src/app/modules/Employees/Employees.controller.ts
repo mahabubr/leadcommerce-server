@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import { paginationFields } from '../../../constants/paginationConstants';
 import catAsync from '../../../shared/catchAsync';
 import pick from '../../../shared/pick';
@@ -53,9 +54,10 @@ const getSingleEmploye = catAsync(async (req: Request, res: Response) => {
 // * update Employe
 
 const updateEmploye = catAsync(async (req: Request, res: Response) => {
-  const { id } = req.params;
+  const decoded = jwt.decode(req.headers.authorization as string) as JwtPayload;
+
   const updatedData = req.body;
-  const result = await EmployeServices.updateEmploye(id, updatedData);
+  const result = await EmployeServices.updateEmploye(decoded.id, updatedData);
 
   sendResponse<IEmploye | null>(res, {
     statusCode: httpStatus.OK,

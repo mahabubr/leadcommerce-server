@@ -11,7 +11,7 @@ router.post(
   EmployeController.createEmploye
 );
 // update Employe
-router.patch('/:id', EmployeController.updateEmploye);
+router.patch('/update', EmployeController.updateEmploye);
 // get single data from single Employe
 router.get('/:id', EmployeController.getSingleEmploye);
 // delete Employe
