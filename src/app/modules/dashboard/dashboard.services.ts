@@ -5,10 +5,15 @@ const getDashboardInfo = async () => {
   const dailyOrders = await DashboardUtils.getDailyOrders();
   const dailyRevenue = await DashboardUtils.getDailyRevenue();
   const dailyProducts = await DashboardUtils.getDailyProducts();
-
   const monthlyOrders = await DashboardUtils.getMonthlyOrdersCurrentYear();
   const weeklyOrders = await DashboardUtils.getLastFourWeekdaysOrders();
   const yearlyOrders = await DashboardUtils.getYearlyOrders();
+  const weeklySignUp = await DashboardUtils.getUserWeeklySignUp();
+  const ordersStats = await DashboardUtils.getOrderStats();
+  const userByCountry = await DashboardUtils.getUserByCountry();
+  const topProduct = await DashboardUtils.getTopProducts();
+  const topCategory = await DashboardUtils.getTopCatagories();
+  const topOrders = await DashboardUtils.getTopOrders();
 
   const info = {
     userDailySingUp,
@@ -19,6 +24,12 @@ const getDashboardInfo = async () => {
       monthlyOrders,
       weeklyOrders,
       yearlyOrders,
+      weeklySignUp,
+      ordersStats,
+      userByCountry,
+      topProduct,
+      topCategory,
+      topOrders,
     },
   };
 

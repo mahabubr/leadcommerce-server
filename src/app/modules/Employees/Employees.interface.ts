@@ -8,6 +8,7 @@ export type IEmploye = {
   email: string;
   phone: string;
   password: string;
+  country: string;
 };
 
 export type EmployeModel = Model<IEmploye, Record<string, unknown>>;

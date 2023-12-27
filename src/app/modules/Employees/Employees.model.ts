@@ -14,6 +14,7 @@ const EmployeSchema = new Schema<IEmploye>(
     email: { type: String, required: true },
     phone: { type: String, required: true },
     password: { type: String, required: true },
+    country: { type: String, default: 'United States' },
   },
   {
     timestamps: true,
