@@ -4,8 +4,8 @@ import { Secret } from 'jsonwebtoken';
 import config from '../../../config';
 import ApiError from '../../../errors/ApiError';
 import { JwtHelper } from '../../helpers/jwtHelpers';
+import Employe from '../Employees/employees.model';
 import Admin from '../admin/admin.model';
-import Employe from '../employees/employees.model';
 import Store from '../store/store.model';
 import { IAuth } from './auth.interface';
 

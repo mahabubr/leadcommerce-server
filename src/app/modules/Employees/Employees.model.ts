@@ -1,6 +1,7 @@
 import { Schema, Types, model } from 'mongoose';
 import { EmployeModel, IEmploye } from './employees.interface';
 
+
 const EmployeSchema = new Schema<IEmploye>(
   {
     image: { type: String },

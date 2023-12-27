@@ -8,6 +8,7 @@ import sendResponse from '../../../shared/sendResponse';
 import { EmployeFilterableFields, IEmploye } from './employees.interface';
 import { EmployeServices } from './employees.services';
 
+
 const createEmploye = catAsync(async (req: Request, res: Response) => {
   const { ...EmployeData } = req.body;
 
