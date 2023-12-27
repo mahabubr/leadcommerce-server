@@ -32,14 +32,19 @@ export type IOrdersFilters = {
   searchTerm: string;
 };
 
-export type IOrderStatus = 'pending' | 'delivered' | 'cancel' | 'paused';
+export type IOrderStatus =
+  | 'pending'
+  | 'delivered'
+  | 'cancel'
+  | 'paused'
+  | 'refunds';
 export type IPaymentStatus = 'pending' | 'completed' | 'canceled';
 export type IShipmentStatus = 'pending' | 'completed' | 'canceled' | 'paused';
 
 /* orders */
 export type IOrders = {
   buyer_id?: Types.ObjectId | string;
-  user_id: Types.ObjectId; // vendor user_id
+  store_id: Types.ObjectId; // vendor user_id 
   order_code: string; // automatically generated should be unique
   order_product_list: IOrdersProductList[];
   total_items: number;

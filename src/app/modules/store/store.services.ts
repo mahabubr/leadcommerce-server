@@ -10,6 +10,7 @@ import Employe from '../employees/employees.model';
 import { StoreSearchableFields } from './store.constants';
 import { IStoreFilters, IStores } from './store.interface';
 import Store from './store.model';
+import { SellerDashboardUtils } from './store.utils';
 
 const createStore = async (payload: IStores): Promise<IStores> => {
   const admin = await Admin.findOne({ email: payload.email });
@@ -166,6 +167,33 @@ const deleteStore = async (id: string): Promise<IStores | null> => {
   return result;
 };
 
+// *
+
+const getDashboardInfoForSeller = async () => {
+  const getPendingOrdersData =
+    await SellerDashboardUtils.getPendingOrdersData();
+  const getDeliveredOrdersData =
+    await SellerDashboardUtils.getDeliveredOrdersData();
+  const getRefundsOrdersData =
+    await SellerDashboardUtils.getRefundsOrdersData();
+  const totalRefunds = await SellerDashboardUtils.totalRefunds();
+  const totalEarning = await SellerDashboardUtils.totalEarning();
+  const totalOrders = await SellerDashboardUtils.totalOrders();
+
+  const info = {
+    getPendingOrdersData,
+    getDeliveredOrdersData,
+    getRefundsOrdersData,
+    data: {
+      refund: totalRefunds,
+      earning: totalEarning,
+      total_orders: totalOrders,
+    },
+  };
+
+  return info;
+};
+
 export const StoreServices = {
   createStore,
   getAllStore,
@@ -173,4 +201,5 @@ export const StoreServices = {
   updateStore,
   deleteStore,
   getStoreSingleStore,
+  getDashboardInfoForSeller,
 };

@@ -20,6 +20,15 @@ router.get(
   auth(ENUM_ROLE.STORE),
   StoreController.getStoreSingleStore
 );
+
+// search and filter and get multiple data
+router.get('/', auth(ENUM_ROLE.ADMIN), StoreController.getAllStore);
+router.get(
+  '/store-dashboard-data',
+  // auth(ENUM_ROLE.EMPLOYEE, ENUM_ROLE.STORE),
+  StoreController.getDashboardInfoForSeller
+);
+
 // get single data from single Store
 router.get(
   '/:id',
@@ -29,7 +38,5 @@ router.get(
 
 // delete store
 router.delete('/:id', auth(ENUM_ROLE.ADMIN), StoreController.deleteStore);
-// search and filter and get multiple data
-router.get('/', auth(ENUM_ROLE.ADMIN), StoreController.getAllStore);
 
 export const StoreRoutes = router;
