@@ -9,6 +9,7 @@ const AdminSchema = new Schema<IAdmin>(
     password: { type: String, required: true },
     phone: { type: String, required: true },
     address: { type: String, required: true },
+    country: { type: String, default: 'United States' },
   },
   {
     timestamps: true,

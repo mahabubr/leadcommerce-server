@@ -19,6 +19,7 @@ const StoreSchema = new Schema<IStores>(
     balance: { type: Number, default: null },
     company_type: { type: String, default: null },
     website: { type: String, default: null },
+    country: { type: String, default: 'United States' },
   },
   {
     timestamps: true,

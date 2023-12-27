@@ -14,6 +14,7 @@ export type IStores = {
   balance: number;
   company_type: string;
   website: string;
+  country: string;
 };
 
 export type StoreModel = Model<IStores, Record<string, unknown>>;
