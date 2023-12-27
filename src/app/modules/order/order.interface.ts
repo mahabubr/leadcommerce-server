@@ -32,7 +32,12 @@ export type IOrdersFilters = {
   searchTerm: string;
 };
 
-export type IOrderStatus = 'pending' | 'delivered' | 'cancel' | 'paused';
+export type IOrderStatus =
+  | 'pending'
+  | 'delivered'
+  | 'cancel'
+  | 'paused'
+  | 'accept';
 export type IPaymentStatus = 'pending' | 'completed' | 'canceled';
 export type IShipmentStatus = 'pending' | 'completed' | 'canceled' | 'paused';
 

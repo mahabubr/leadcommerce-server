@@ -49,7 +49,6 @@ const createOrder = async (payload: IOrdersReq): Promise<IOrders | null> => {
       isExistProduct.price !== productPrice ||
       isExistProduct.quantity < productQuantity
     ) {
-
       throw new ApiError(
         httpStatus.NOT_FOUND,
         'request product details is not matching! 🚀🚀🚀'
@@ -98,7 +97,7 @@ const createOrder = async (payload: IOrdersReq): Promise<IOrders | null> => {
           'update time product is not found!'
         );
       }
-  
+
       await Products.findByIdAndUpdate(
         productId,
         {
@@ -186,7 +185,7 @@ const getAllOrders = async (
   const result = await Orders.find(whereCondition)
     .sort(sortCondition)
     .skip(skip)
-    .limit(limit)
+    .limit(limit);
 
   const total = await Orders.countDocuments(whereCondition);
 
@@ -248,6 +247,19 @@ const updateOrder = async (
   return result;
 };
 
+const updateStatus = async (payload: { data: string; id: string }) => {
+  const result = await Orders.updateOne(
+    { _id: payload.id },
+    {
+      $set: {
+        order_status: payload.data,
+      },
+    }
+  );
+
+  return result;
+};
+
 // * delete single product
 const deleteOrder = async (id: string): Promise<IOrders | null> => {
   const isExist = await Orders.findById(id);
@@ -266,4 +278,5 @@ export const OrdersServices = {
   getSingleOrder,
   updateOrder,
   deleteOrder,
+  updateStatus,
 };

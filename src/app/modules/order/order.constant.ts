@@ -9,6 +9,7 @@ export const OrderStatus: IOrderStatus[] = [
   'delivered',
   'cancel',
   'paused',
+  'accept',
 ];
 export const PaymentStatus: IPaymentStatus[] = [
   'pending',

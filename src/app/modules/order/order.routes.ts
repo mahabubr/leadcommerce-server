@@ -17,6 +17,7 @@ router.put(
   requestValidation.validateRequest(OrderValidation.updateOrderZodSchema),
   OrdersController.updateOrder
 );
+router.patch('/update-status', OrdersController.updateStatus);
 router.delete('/:id', OrdersController.deleteOrder);
 
 export const OrdersRoutes = router;
