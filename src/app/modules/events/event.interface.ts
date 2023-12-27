@@ -1,3 +1,5 @@
+import { Model } from 'mongoose';
+
 export type IEventGust = {
   image: string;
   name: string;
@@ -22,5 +24,7 @@ export type IEvent = {
   seat: number;
   description: string;
   eventGust: IEventGust[];
-  event: IEventTopic[];
+  eventTopic: IEventTopic[];
 };
+
+export type EventModel = Model<IEvent, Record<string, unknown>>;
