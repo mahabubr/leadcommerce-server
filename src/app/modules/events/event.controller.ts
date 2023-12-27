@@ -1,7 +1,10 @@
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
+import { paginationFields } from '../../../constants/paginationConstants';
 import catAsync from '../../../shared/catchAsync';
+import pick from '../../../shared/pick';
 import sendResponse from '../../../shared/sendResponse';
+import { EventFilterableField } from './event.constant';
 import { IEvent } from './event.interface';
 import { EventService } from './event.service';
 
@@ -14,6 +17,21 @@ const createEvent = catAsync(async (req: Request, res: Response) => {
     success: true,
     message: 'Event created successfully',
     data: result,
+  });
+});
+
+const getAllEvents = catAsync(async (req: Request, res: Response) => {
+  const filters = pick(req.query, EventFilterableField);
+  const paginationOptions = pick(req.query, paginationFields);
+
+  const result = await EventService.getAllEvents(filters, paginationOptions);
+
+  sendResponse<IEvent[]>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Events retrieved successfully',
+    meta: result?.meta,
+    data: result?.data,
   });
 });
 
@@ -59,4 +77,5 @@ export const EventController = {
   getSingleEvent,
   updateEvent,
   deleteEvent,
+  getAllEvents,
 };

@@ -4,6 +4,7 @@ import { EventController } from './event.controller';
 const router = express.Router();
 
 router.post('/', EventController.createEvent);
+router.get('/', EventController.getAllEvents);
 router.get('/:id', EventController.getSingleEvent);
 router.put('/:id', EventController.updateEvent);
 router.delete('/:id', EventController.deleteEvent);
