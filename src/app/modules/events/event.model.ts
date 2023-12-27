@@ -1,19 +1,6 @@
 import { Schema, model } from 'mongoose';
 import { EventModel, IEvent } from './event.interface';
 
-// Define the interface for the event guest
-export type IEventGust = {
-  image: string;
-  name: string;
-  designation: string;
-  post: string;
-};
-
-// Define the interface for the event topic
-export type IEventTopic = {
-  title: string;
-};
-
 const EventSchema = new Schema<IEvent>({
   eventTitle: {
     type: String,
