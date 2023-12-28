@@ -5,7 +5,7 @@ import ApiError from '../../../errors/ApiError';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IGenericResponse } from '../../../interfaces/common';
 import { IPaginationOptions } from '../../../interfaces/pagination';
-import Employe from '../Employees/employees.model';
+import Employe from '../employees/employees.model';
 import Admin from '../admin/admin.model';
 import { StoreSearchableFields } from './store.constants';
 import { IStoreFilters, IStores } from './store.interface';

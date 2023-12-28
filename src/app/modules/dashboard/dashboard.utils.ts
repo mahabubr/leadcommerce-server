@@ -2,7 +2,7 @@
 import { PipelineStage } from 'mongoose';
 import Admin from '../admin/admin.model';
 import { Category } from '../category/category.model';
-import Employe from '../Employees/employees.model';
+import Employe from '../employees/employees.model';
 import { Orders } from '../order/order.model';
 import Payment from '../payment/payment.model';
 import { Products } from '../products/products.model';

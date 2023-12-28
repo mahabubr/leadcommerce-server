@@ -5,11 +5,8 @@ import { paginationFields } from '../../../constants/paginationConstants';
 import catAsync from '../../../shared/catchAsync';
 import pick from '../../../shared/pick';
 import sendResponse from '../../../shared/sendResponse';
-import { EmployeFilterableFields, IEmploye } from './employees.interface';
+import { EmployeFilterableFields, IEmploye } from './employees.interfaces';
 import { EmployeServices } from './employees.services';
-
-
-
 
 const createEmploye = catAsync(async (req: Request, res: Response) => {
   const { ...EmployeData } = req.body;

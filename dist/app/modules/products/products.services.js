@@ -24,18 +24,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProductsServices = void 0;
+/* eslint-disable @typescript-eslint/no-explicit-any */
 const http_status_1 = __importDefault(require("http-status"));
 const ApiError_1 = __importDefault(require("../../../errors/ApiError"));
 const paginationHelper_1 = require("../../../helpers/paginationHelper");
 const products_constant_1 = require("./products.constant");
 const products_model_1 = require("./products.model");
 // * create product
-const createProduct = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+const createProduct = (payload, storeId) => __awaiter(void 0, void 0, void 0, function* () {
+    payload.store_id = storeId;
     const result = yield products_model_1.Products.create(payload);
     return result;
 });
 // * get all products
-const getAllProducts = (filters, paginationOptions) => __awaiter(void 0, void 0, void 0, function* () {
+const getAllProducts = (filters, paginationOptions, id) => __awaiter(void 0, void 0, void 0, function* () {
     const { searchTerm } = filters, filtersData = __rest(filters, ["searchTerm"]);
     const { page, limit, skip, sortBy, sortOrder } = paginationHelper_1.paginationHelpers.calculatePagination(paginationOptions);
     const andCondition = [];
@@ -60,7 +62,7 @@ const getAllProducts = (filters, paginationOptions) => __awaiter(void 0, void 0,
     if (sortBy && sortOrder) {
         sortCondition[sortBy] = sortOrder;
     }
-    const whereCondition = andCondition.length > 0 ? { $and: andCondition } : {};
+    const whereCondition = andCondition.length > 0 ? { $and: andCondition } : { store_id: id };
     const result = yield products_model_1.Products.find(whereCondition)
         .sort(sortCondition)
         .skip(skip)
@@ -80,11 +82,16 @@ const getSingleProduct = (id) => __awaiter(void 0, void 0, void 0, function* () 
     const result = yield products_model_1.Products.findById(id);
     return result;
 });
+// * get single product
+const getAllStoreProduct = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield products_model_1.Products.find({ store_id: id });
+    return result;
+});
 // * update single product
 const updateProduct = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {
     const isExist = yield products_model_1.Products.findById(id);
     if (!isExist) {
-        throw new ApiError_1.default(http_status_1.default.NOT_FOUND, 'This user is not exist');
+        throw new ApiError_1.default(http_status_1.default.NOT_FOUND, 'product is not exist');
     }
     const result = yield products_model_1.Products.findOneAndUpdate({ _id: id }, payload, {
         new: true,
@@ -105,5 +112,6 @@ exports.ProductsServices = {
     updateProduct,
     deleteProduct,
     getSingleProduct,
+    getAllStoreProduct,
     getAllProducts,
 };

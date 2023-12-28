@@ -24,7 +24,7 @@ app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
 // ROUTES
-app.use('/api/v1/', routes_1.default);
+app.use('/api/v1', routes_1.default);
 app.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.send('Hello world');
 }));

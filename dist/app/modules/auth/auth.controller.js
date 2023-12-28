@@ -34,7 +34,7 @@ const loginUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
-        message: 'orders created successfully',
+        message: 'user login successfully',
         data: result,
     });
 }));
@@ -44,7 +44,7 @@ const refreshToken = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, v
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
-        message: 'orders created successfully',
+        message: 'refresh token fetch successfully',
         data: result,
     });
 }));

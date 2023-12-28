@@ -25,8 +25,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.StoreController = void 0;
 const http_status_1 = __importDefault(require("http-status"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const paginationConstants_1 = require("../../../constants/paginationConstants");
 const catchAsync_1 = __importDefault(require("../../../shared/catchAsync"));
+const pick_1 = __importDefault(require("../../../shared/pick"));
 const sendResponse_1 = __importDefault(require("../../../shared/sendResponse"));
+const store_constants_1 = require("./store.constants");
 const store_services_1 = require("./store.services");
 const createStore = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const storeData = __rest(req.body, []);
@@ -34,20 +38,81 @@ const createStore = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, vo
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
-        message: 'orders created successfully',
+        message: 'Stores created successfully',
         data: result,
     });
 }));
+// get multiple data from database
 const getAllStore = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield store_services_1.StoreServices.getAllStore();
+    const filters = (0, pick_1.default)(req.query, store_constants_1.StoreFilterableFields);
+    const paginationOptions = (0, pick_1.default)(req.query, paginationConstants_1.paginationFields);
+    const result = yield store_services_1.StoreServices.getAllStore(filters, paginationOptions);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
-        message: 'orders created successfully',
+        message: 'Stores retrived successfully',
+        meta: result === null || result === void 0 ? void 0 : result.meta,
+        data: result === null || result === void 0 ? void 0 : result.data,
+    });
+}));
+const getSingleStore = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const result = yield store_services_1.StoreServices.getSingleStore(id);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'Store Fetched successfully',
+        data: result,
+    });
+}));
+const getStoreSingleStore = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const decoded = jsonwebtoken_1.default.decode(req.headers.authorization);
+    const result = yield store_services_1.StoreServices.getStoreSingleStore(decoded.id);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'Store Fetched successfully',
+        data: result,
+    });
+}));
+// * update Store
+const updateStore = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const updatedData = req.body;
+    const result = yield store_services_1.StoreServices.updateStore(id, updatedData);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'Store updated successfully',
+        data: result,
+    });
+}));
+// * delete single Store
+const deleteStore = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const result = yield store_services_1.StoreServices.deleteStore(id);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'Store deleted successfully',
+        data: result,
+    });
+}));
+const getDashboardInfoForSeller = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield store_services_1.StoreServices.getDashboardInfoForSeller();
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'Store Data fetch successfully',
         data: result,
     });
 }));
 exports.StoreController = {
     createStore,
     getAllStore,
+    getSingleStore,
+    updateStore,
+    deleteStore,
+    getStoreSingleStore,
+    getDashboardInfoForSeller,
 };

@@ -78,6 +78,16 @@ const updateOrder = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, vo
         data: result,
     });
 }));
+const updateStatus = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const updatedData = req.body;
+    const result = yield order_services_1.OrdersServices.updateStatus(updatedData);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'Order updated successfully',
+        data: result,
+    });
+}));
 // * delete single Order
 const deleteOrder = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
@@ -95,4 +105,5 @@ exports.OrdersController = {
     getSingleOrder,
     updateOrder,
     deleteOrder,
+    updateStatus,
 };
