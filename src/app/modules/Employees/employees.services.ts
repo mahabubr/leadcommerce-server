@@ -11,7 +11,7 @@ import {
   EmployeSearchableFields,
   IEmploye,
   IEmployeFilters,
-} from './employees.interface';
+} from './employees.interfaces';
 import Employe from './employees.model';
 
 const createEmploye = async (payload: IEmploye): Promise<IEmploye> => {

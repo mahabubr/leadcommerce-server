@@ -13,5 +13,6 @@ router.post('/', validateRequest_1.requestValidation.validateRequest(order_valid
 router.get('/', order_controller_1.OrdersController.getAllOrders);
 router.get('/:id', order_controller_1.OrdersController.getSingleOrder);
 router.put('/:id', validateRequest_1.requestValidation.validateRequest(order_validation_1.OrderValidation.updateOrderZodSchema), order_controller_1.OrdersController.updateOrder);
+router.patch('/update-status', order_controller_1.OrdersController.updateStatus);
 router.delete('/:id', order_controller_1.OrdersController.deleteOrder);
 exports.OrdersRoutes = router;

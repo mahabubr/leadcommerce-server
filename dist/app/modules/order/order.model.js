@@ -12,10 +12,10 @@ const ShipmentAddressSchema = new mongoose_1.Schema({
 });
 const OrdersSchema = new mongoose_1.Schema({
     buyer_id: { type: mongoose_1.Schema.Types.ObjectId, default: null },
-    user_id: {
+    store_id: {
         type: mongoose_1.Schema.Types.ObjectId,
-        // ref: 'user_id',  // TODO: change to the vendor user_id
-        required: true,
+        ref: 'Store', // TODO: change to the vendor user_id
+        // required: true,
     },
     order_code: { type: String, required: true, unique: true },
     order_product_list: [

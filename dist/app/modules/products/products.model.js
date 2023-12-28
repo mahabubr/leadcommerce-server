@@ -5,32 +5,33 @@ const mongoose_1 = require("mongoose");
 const products_constant_1 = require("./products.constant");
 const ProductsSchema = new mongoose_1.Schema({
     image: {
-        type: String,
-        required: true,
+        avatar: { type: String },
+        avatar_public_url: { type: String },
     },
     productName: {
         type: String,
         required: true,
     },
     categories: {
-        type: [String],
+        type: String,
         required: true,
     },
     slug: {
         type: String,
         required: true,
     },
-    shortDescription: {
+    description: {
+        type: String,
+    },
+    fullDescription: {
         type: String,
         required: true,
     },
     color: {
         type: [String],
-        required: true,
     },
     size: {
         type: [String],
-        required: true,
     },
     price: {
         type: Number,
@@ -42,7 +43,6 @@ const ProductsSchema = new mongoose_1.Schema({
     },
     fullDetail: {
         type: String,
-        required: true,
     },
     productTags: {
         type: [String],
@@ -52,6 +52,11 @@ const ProductsSchema = new mongoose_1.Schema({
         type: String,
         required: true,
         enum: products_constant_1.ProductStatus,
+        default: 'active',
+    },
+    store_id: {
+        type: mongoose_1.Schema.Types.ObjectId,
+        // ref: 'Payments',  // TODO: change to the Payments table schema
     },
 }, {
     timestamps: true,
