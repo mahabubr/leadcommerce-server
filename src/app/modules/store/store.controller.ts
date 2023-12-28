@@ -90,6 +90,19 @@ const deleteStore = catAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getDashboardInfoForSeller = catAsync(
+  async (req: Request, res: Response) => {
+    const result = await StoreServices.getDashboardInfoForSeller();
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Store Data fetch successfully',
+      data: result,
+    });
+  }
+);
+
 export const StoreController = {
   createStore,
   getAllStore,
@@ -97,4 +110,5 @@ export const StoreController = {
   updateStore,
   deleteStore,
   getStoreSingleStore,
+  getDashboardInfoForSeller,
 };
