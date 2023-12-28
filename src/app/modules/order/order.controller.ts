@@ -65,7 +65,17 @@ const updateOrder = catAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+const updateStatus = catAsync(async (req: Request, res: Response) => {
+  const updatedData = req.body;
+  const result = await OrdersServices.updateStatus(updatedData);
 
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Order updated successfully',
+    data: result,
+  });
+});
 
 // * delete single Order
 const deleteOrder = catAsync(async (req: Request, res: Response) => {
@@ -86,4 +96,5 @@ export const OrdersController = {
   getSingleOrder,
   updateOrder,
   deleteOrder,
+  updateStatus,
 };

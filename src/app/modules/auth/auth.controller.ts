@@ -12,7 +12,7 @@ const loginUser = catAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'orders created successfully',
+    message: 'user login successfully',
     data: result,
   });
 });
@@ -25,7 +25,7 @@ const refreshToken = catAsync(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'orders created successfully',
+    message: 'refresh token fetch successfully',
     data: result,
   });
 });

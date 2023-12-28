@@ -1,43 +1,87 @@
 import bcrypt from 'bcrypt';
 import httpStatus from 'http-status';
+import { Secret } from 'jsonwebtoken';
+import config from '../../../config';
 import ApiError from '../../../errors/ApiError';
 import { JwtHelper } from '../../helpers/jwtHelpers';
+import Employe from '../Employees/employees.model';
+import Admin from '../admin/admin.model';
 import Store from '../store/store.model';
 import { IAuth } from './auth.interface';
 
 const loginUser = async (payload: IAuth) => {
   const { email, password } = payload;
 
-  const isExist = await Store.findOne({
-    email: email,
-  });
+  const admin = await Admin.findOne({ email: email });
+  const employee = await Employe.findOne({ email: email });
+  const store = await Store.findOne({ email: email });
 
-  if (!isExist) {
-    throw new ApiError(httpStatus.FORBIDDEN, 'Store not found');
+  if (!admin && !store && !employee) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'User Not Found');
   }
 
-  const isPassMatched = await bcrypt.compare(password, isExist.password);
+  if (admin) {
+    const isPassMatched = await bcrypt.compare(password, admin.password);
 
-  if (!isPassMatched) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, 'Password not matched');
+    if (!isPassMatched) {
+      throw new ApiError(httpStatus.UNAUTHORIZED, 'Password not matched');
+    }
+
+    const accessToken = JwtHelper.createToken(
+      { id: admin._id, email: admin.email, role: 'admin' },
+      config.jwt.secret as Secret,
+      '30d'
+    );
+
+    return {
+      accessToken,
+    };
   }
 
-  const accessToken = JwtHelper.createToken(
-    { id: isExist._id, email: isExist.email },
-    'Secret',
-    '30d'
-  );
+  if (employee) {
+    const isPassMatched = await bcrypt.compare(password, employee.password);
 
-  return {
-    accessToken,
-  };
+    if (!isPassMatched) {
+      throw new ApiError(httpStatus.UNAUTHORIZED, 'Password not matched');
+    }
+
+    const accessToken = JwtHelper.createToken(
+      { id: employee._id, email: employee.email, role: 'employee' },
+      config.jwt.secret as Secret,
+      '30d'
+    );
+
+    return {
+      accessToken,
+    };
+  }
+  if (store) {
+    const isPassMatched = await bcrypt.compare(password, store.password);
+
+    if (!isPassMatched) {
+      throw new ApiError(httpStatus.UNAUTHORIZED, 'Password not matched');
+    }
+
+    const accessToken = JwtHelper.createToken(
+      { id: store._id, email: store.email, role: 'store' },
+      config.jwt.secret as Secret,
+      '30d'
+    );
+
+    return {
+      accessToken,
+    };
+  }
 };
 
 const refreshToken = async (token: { token: string }) => {
-  let verifyToken = JwtHelper.verifyToken(token.token, 'Secret');
+  let verifyToken;
 
   try {
-    verifyToken = JwtHelper.verifyToken(token.token, 'Secret');
+    verifyToken = JwtHelper.verifyToken(
+      token.token,
+      config.jwt.secret as Secret
+    );
   } catch (error) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Token not verified');
   }
@@ -54,7 +98,7 @@ const refreshToken = async (token: { token: string }) => {
 
   const accessToken = JwtHelper.createToken(
     { id: isExist._id, email: isExist.email },
-    'Secret',
+    config.jwt.secret as Secret,
     '5m'
   );
 

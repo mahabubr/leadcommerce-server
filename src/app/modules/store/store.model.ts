@@ -3,16 +3,23 @@ import { IStores, StoreModel } from './store.interface';
 
 const StoreSchema = new Schema<IStores>(
   {
-    logo: { type: String },
+    logo: {
+      type: String,
+      default: null,
+    },
     name: { type: String, required: true },
-    owner_name: { type: String },
+    owner_name: { type: String, default: null },
     email: { type: String, required: true },
     password: { type: String, required: true },
-    contact_no: { type: String },
-    location: { type: String },
-    total_orders: { type: String },
-    earning: { type: Number },
-    refund: { type: Number },
+    contact_no: { type: String, default: null },
+    location: { type: String, default: null },
+    total_orders: { type: String, default: null },
+    earning: { type: [], default: null },
+    refund: { type: Number, default: null },
+    balance: { type: Number, default: null },
+    company_type: { type: String, default: null },
+    website: { type: String, default: null },
+    country: { type: String, default: 'United States' },
   },
   {
     timestamps: true,

@@ -25,20 +25,27 @@ export type IOrdersReq = {
   coupon_discount: 200; // default should be 0
   total_amount: number;
   shipment_address?: shipment_address;
+  shipment_date?: string;
 };
 
 export type IOrdersFilters = {
   searchTerm: string;
 };
 
-export type IOrderStatus = 'pending' | 'delivered' | 'cancel';
+export type IOrderStatus =
+  | 'pending'
+  | 'delivered'
+  | 'cancel'
+  | 'paused'
+  | 'accept'
+  | 'refunds';
 export type IPaymentStatus = 'pending' | 'completed' | 'canceled';
-export type IShipmentStatus = 'pending' | 'completed' | 'canceled';
+export type IShipmentStatus = 'pending' | 'completed' | 'canceled' | 'paused';
 
 /* orders */
 export type IOrders = {
   buyer_id?: Types.ObjectId | string;
-  user_id: Types.ObjectId; // vendor user_id
+  store_id: Types.ObjectId; // vendor user_id
   order_code: string; // automatically generated should be unique
   order_product_list: IOrdersProductList[];
   total_items: number;

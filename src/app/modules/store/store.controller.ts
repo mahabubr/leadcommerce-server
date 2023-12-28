@@ -1,7 +1,11 @@
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
+import jwt, { JwtPayload } from 'jsonwebtoken';
+import { paginationFields } from '../../../constants/paginationConstants';
 import catAsync from '../../../shared/catchAsync';
+import pick from '../../../shared/pick';
 import sendResponse from '../../../shared/sendResponse';
+import { StoreFilterableFields } from './store.constants';
 import { IStores } from './store.interface';
 import { StoreServices } from './store.services';
 
@@ -13,23 +17,98 @@ const createStore = catAsync(async (req: Request, res: Response) => {
   sendResponse<IStores | null>(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'orders created successfully',
+    message: 'Stores created successfully',
     data: result,
   });
 });
 
+// get multiple data from database
 const getAllStore = catAsync(async (req: Request, res: Response) => {
-  const result = await StoreServices.getAllStore();
+  const filters = pick(req.query, StoreFilterableFields);
+  const paginationOptions = pick(req.query, paginationFields);
+  const result = await StoreServices.getAllStore(filters, paginationOptions);
 
-  sendResponse<IStores[] | null>(res, {
+  sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'orders created successfully',
+    message: 'Stores retrived successfully',
+    meta: result?.meta,
+    data: result?.data,
+  });
+});
+
+const getSingleStore = catAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await StoreServices.getSingleStore(id);
+
+  sendResponse<IStores | null>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Store Fetched successfully',
     data: result,
   });
 });
+
+const getStoreSingleStore = catAsync(async (req: Request, res: Response) => {
+  const decoded = jwt.decode(req.headers.authorization as string) as JwtPayload;
+
+  const result = await StoreServices.getStoreSingleStore(decoded.id);
+
+  sendResponse<IStores | null>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Store Fetched successfully',
+    data: result,
+  });
+});
+
+// * update Store
+
+const updateStore = catAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const updatedData = req.body;
+  const result = await StoreServices.updateStore(id, updatedData);
+
+  sendResponse<IStores | null>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Store updated successfully',
+    data: result,
+  });
+});
+
+// * delete single Store
+const deleteStore = catAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await StoreServices.deleteStore(id);
+
+  sendResponse<IStores | null>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Store deleted successfully',
+    data: result,
+  });
+});
+
+const getDashboardInfoForSeller = catAsync(
+  async (req: Request, res: Response) => {
+    const result = await StoreServices.getDashboardInfoForSeller();
+
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Store Data fetch successfully',
+      data: result,
+    });
+  }
+);
 
 export const StoreController = {
   createStore,
   getAllStore,
+  getSingleStore,
+  updateStore,
+  deleteStore,
+  getStoreSingleStore,
+  getDashboardInfoForSeller,
 };
