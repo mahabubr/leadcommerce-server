@@ -6,8 +6,10 @@ export type IPayment = {
   order_id: Schema.Types.ObjectId;
   payment_status: IPaymentStatus;
   payment_code: string;
+  payment_method: string;
   user_id: Schema.Types.ObjectId;
   shop_id: Schema.Types.ObjectId;
+  products: [];
 };
 
 export type PaymentModel = Model<IPayment, Record<string, unknown>>;
