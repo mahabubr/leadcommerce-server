@@ -4,6 +4,7 @@ import { IProducts } from '../products/products.interface';
 export type IOrdersProductList = {
   product_id: Types.ObjectId | IProducts;
   product_quantity: number;
+  product_name: string;
   product_price: number;
 };
 

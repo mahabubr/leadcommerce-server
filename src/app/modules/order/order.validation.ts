@@ -8,6 +8,9 @@ const productSchema = z.object({
   product_quantity: z.number({
     required_error: 'Product quantity is required',
   }),
+  product_name: z.string({
+    required_error: 'Product name is required',
+  }).optional(),
   product_price: z.number({
     required_error: 'price id is required',
   }),
