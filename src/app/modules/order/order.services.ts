@@ -111,12 +111,12 @@ const createOrder = async (payload: IOrdersReq): Promise<IOrders | null> => {
 
     // ** [create a order]/part-02
     // TODO: buyer is fake
-    // TODO: user_id will be update from auth middleware data
+    // TODO: store_id will be update from auth middleware data
     const result = await Orders.create(
       [
         {
           buyer_id: '657ff528bcc34f2ba044d717',
-          user_id: '657ff528bcc34f2ba044d717',
+          store_id: '657ff528bcc34f2ba044d717',
           order_code: order_code,
           order_product_list: order_product_list,
           total_items: order_product_list.length,
@@ -203,17 +203,8 @@ const getAllOrders = async (
 const getSingleOrder = async (id: string): Promise<IOrders | null> => {
   const result = await Orders.findById(id)
     .populate({
-      path: 'user_id',
-      // select: 'from to distance',
+      path: 'store_id',
     })
-    .populate({
-      path: 'buyer_id',
-    })
-    .populate({
-      path: 'buyer_id',
-    })
-    .populate('payment_id')
-    .populate('shipment_id')
     .populate({
       path: 'order_product_list.product_id',
       // select: '*',   // TODO: retrieved all products info/fields as the requirements

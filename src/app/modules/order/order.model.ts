@@ -15,7 +15,7 @@ const OrdersSchema = new Schema<IOrders, OrdersModel>(
     buyer_id: { type: Schema.Types.ObjectId, default: null },
     store_id: {
       type: Schema.Types.ObjectId,
-      ref: 'Store',  // TODO: change to the vendor user_id
+      ref: 'Store', // TODO: change to the vendor user_id
       // required: true,
     },
     order_code: { type: String, required: true, unique: true },
@@ -26,6 +26,7 @@ const OrdersSchema = new Schema<IOrders, OrdersModel>(
           ref: 'Products',
           required: true,
         },
+        product_name: { type: String },
         product_quantity: { type: Number, required: true },
         product_price: { type: Number, required: true },
       },
