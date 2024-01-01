@@ -11,8 +11,12 @@ import { Orders } from './order.model';
 import { generatedOrderCode } from './order.utils';
 
 // * create Order
-const createOrder = async (payload: IOrdersReq): Promise<IOrders | null> => {
+const createOrder = async (
+  payload: IOrdersReq,
+  id: string
+): Promise<IOrders | null> => {
   // console.log(payload);
+  payload.buyer_id = id;
   const { order_product_list, amount, shipment_address, shipment_date } =
     payload;
 
@@ -47,7 +51,7 @@ const createOrder = async (payload: IOrdersReq): Promise<IOrders | null> => {
     if (
       !isExistProduct ||
       isExistProduct.price !== productPrice ||
-      isExistProduct.quantity < productQuantity
+      isExistProduct.quantity <= productQuantity
     ) {
       throw new ApiError(
         httpStatus.NOT_FOUND,

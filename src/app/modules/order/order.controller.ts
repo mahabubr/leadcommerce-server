@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import { paginationFields } from '../../../constants/paginationConstants';
 import catAsync from '../../../shared/catchAsync';
 import pick from '../../../shared/pick';
@@ -11,8 +12,8 @@ import { OrdersServices } from './order.services';
 // * create Order
 const createOrder = catAsync(async (req: Request, res: Response) => {
   const { ...OrderData } = req.body;
-
-  const result = await OrdersServices.createOrder(OrderData);
+  const decoded = jwt.decode(req.headers.authorization as string) as JwtPayload;
+  const result = await OrdersServices.createOrder(OrderData, decoded.id);
 
   sendResponse<IOrders | null>(res, {
     statusCode: httpStatus.OK,
