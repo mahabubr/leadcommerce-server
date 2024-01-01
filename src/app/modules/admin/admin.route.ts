@@ -3,7 +3,6 @@ import { requestValidation } from '../../middleware/validateRequest';
 import { AdminController } from './admin.controller';
 import { AdminValidation } from './admin.validation';
 
-
 const router = express.Router();
 
 router.post(
