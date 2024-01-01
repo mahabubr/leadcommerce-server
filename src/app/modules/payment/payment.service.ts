@@ -12,6 +12,12 @@ import {
 } from './payment.interface';
 import Payment from './payment.model';
 
+
+// 1. add store balance 
+// 2. add employees income
+// 3. update payment status to complete
+// 4. update order status to complete
+
 const createPayment = async (payload: IPayment): Promise<IPayment> => {
   // const PaymentExist = await Payment.findOne({ order_id: payload.order_id });
   // checking order is already used or not
@@ -23,7 +29,7 @@ const createPayment = async (payload: IPayment): Promise<IPayment> => {
 
   const orders = await Orders.findById(payload.order_id);
 
-  console.log(orders); // Check the fetched order data
+  console.log(payload); // Check the fetched order data
 
   // const result: any = (await Payment.create(payload)).populate('order_id');
 
