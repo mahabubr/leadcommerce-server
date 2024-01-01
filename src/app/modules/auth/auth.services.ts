@@ -5,6 +5,7 @@ import config from '../../../config';
 import ApiError from '../../../errors/ApiError';
 import { JwtHelper } from '../../helpers/jwtHelpers';
 import Admin from '../admin/admin.model';
+import Delivery from '../delivery/delivery.model';
 import Employe from '../employees/employees.model';
 import Store from '../store/store.model';
 import { IAuth } from './auth.interface';
@@ -15,8 +16,9 @@ const loginUser = async (payload: IAuth) => {
   const admin = await Admin.findOne({ email: email });
   const employee = await Employe.findOne({ email: email });
   const store = await Store.findOne({ email: email });
+  const delivery = await Delivery.findOne({ email: email });
 
-  if (!admin && !store && !employee) {
+  if (!admin && !store && !employee && !delivery) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'User Not Found');
   }
 
@@ -64,6 +66,23 @@ const loginUser = async (payload: IAuth) => {
 
     const accessToken = JwtHelper.createToken(
       { id: store._id, email: store.email, role: 'store' },
+      config.jwt.secret as Secret,
+      '30d'
+    );
+
+    return {
+      accessToken,
+    };
+  }
+  if (delivery) {
+    const isPassMatched = await bcrypt.compare(password, delivery.password);
+
+    if (!isPassMatched) {
+      throw new ApiError(httpStatus.UNAUTHORIZED, 'Password not matched');
+    }
+
+    const accessToken = JwtHelper.createToken(
+      { id: delivery._id, email: delivery.email, role: 'delivery' },
       config.jwt.secret as Secret,
       '30d'
     );

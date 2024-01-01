@@ -15,6 +15,7 @@ const EmployeSchema = new Schema<IEmploye>(
     phone: { type: String, required: true },
     password: { type: String, required: true },
     country: { type: String, default: 'United States' },
+    income: { type: Number, default: 0 },
   },
   {
     timestamps: true,

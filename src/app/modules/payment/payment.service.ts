@@ -4,6 +4,7 @@ import ApiError from '../../../errors/ApiError';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IGenericResponse } from '../../../interfaces/common';
 import { IPaginationOptions } from '../../../interfaces/pagination';
+import { Orders } from '../order/order.model';
 import {
   IPayment,
   IPaymentFilters,
@@ -12,14 +13,21 @@ import {
 import Payment from './payment.model';
 
 const createPayment = async (payload: IPayment): Promise<IPayment> => {
-  const PaymentExist = await Payment.findOne({ order_id: payload.order_id });
+  // const PaymentExist = await Payment.findOne({ order_id: payload.order_id });
   // checking order is already used or not
-  if (PaymentExist) {
-    throw new ApiError(httpStatus.CONFLICT, 'order_id is already used');
-  }
+  // if (PaymentExist) {
+  //   throw new ApiError(httpStatus.CONFLICT, 'order_id is already used');
+  // }
+  const storeAmount = payload.total_amount * 0.8;
+  const employeeAmount = payload.total_amount * 0.2;
 
-  const result = await Payment.create(payload);
-  return result;
+  const orders = await Orders.findById(payload.order_id);
+
+  console.log(orders); // Check the fetched order data
+
+  // const result: any = (await Payment.create(payload)).populate('order_id');
+
+  // return result;
 };
 
 // get multiple data from Payment py pagination and searching
