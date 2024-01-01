@@ -35,7 +35,7 @@ const order_utils_1 = require("./order.utils");
 // * create Order
 const createOrder = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     // console.log(payload);
-    const { order_product_list, amount, shipment_address } = payload;
+    const { order_product_list, amount, shipment_address, shipment_date } = payload;
     /**
      ** [step-01] check same product product are listed in the db with id, price and quantity
      ** [step-02] coupon checking
@@ -59,7 +59,7 @@ const createOrder = (payload) => __awaiter(void 0, void 0, void 0, function* () 
         if (!isExistProduct ||
             isExistProduct.price !== productPrice ||
             isExistProduct.quantity < productQuantity) {
-            throw new ApiError_1.default(http_status_1.default.NOT_FOUND, 'request product details is not matching!');
+            throw new ApiError_1.default(http_status_1.default.NOT_FOUND, 'request product details is not matching! 🚀🚀🚀');
         }
     }
     //**[step-02] coupon checking
@@ -76,7 +76,7 @@ const createOrder = (payload) => __awaiter(void 0, void 0, void 0, function* () 
     if (total_price !== amount) {
         throw new ApiError_1.default(http_status_1.default.NOT_FOUND, 'request amount is not matching!');
     }
-    //** [step-04] generate a order code
+    //** [step-04] genrate a order code
     const order_code = yield (0, order_utils_1.generatedOrderCode)(); // generated bus code
     //** [step-05]  [reduce product quantity from product table]/part-01 and [create a order]/part-02
     const session = yield mongoose_1.default.startSession();
@@ -111,6 +111,7 @@ const createOrder = (payload) => __awaiter(void 0, void 0, void 0, function* () 
                 amount,
                 total_amount: amount,
                 shipment_address,
+                shipment_date,
             },
         ], { session });
         yield session.commitTransaction();
@@ -203,6 +204,14 @@ const updateOrder = (id, payload) => __awaiter(void 0, void 0, void 0, function*
     });
     return result;
 });
+const updateStatus = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield order_model_1.Orders.updateOne({ _id: payload.id }, {
+        $set: {
+            order_status: payload.data,
+        },
+    });
+    return result;
+});
 // * delete single product
 const deleteOrder = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const isExist = yield order_model_1.Orders.findById(id);
@@ -218,4 +227,5 @@ exports.OrdersServices = {
     getSingleOrder,
     updateOrder,
     deleteOrder,
+    updateStatus,
 };

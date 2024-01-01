@@ -4,6 +4,7 @@ import { IProducts } from '../products/products.interface';
 export type IOrdersProductList = {
   product_id: Types.ObjectId | IProducts;
   product_quantity: number;
+  product_name: string;
   product_price: number;
 };
 
@@ -37,14 +38,15 @@ export type IOrderStatus =
   | 'delivered'
   | 'cancel'
   | 'paused'
-  | 'accept';
+  | 'accept'
+  | 'refunds';
 export type IPaymentStatus = 'pending' | 'completed' | 'canceled';
 export type IShipmentStatus = 'pending' | 'completed' | 'canceled' | 'paused';
 
 /* orders */
 export type IOrders = {
   buyer_id?: Types.ObjectId | string;
-  user_id: Types.ObjectId; // vendor user_id
+  store_id: Types.ObjectId; // vendor user_id
   order_code: string; // automatically generated should be unique
   order_product_list: IOrdersProductList[];
   total_items: number;

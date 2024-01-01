@@ -13,10 +13,10 @@ const ShipmentAddressSchema = new Schema({
 const OrdersSchema = new Schema<IOrders, OrdersModel>(
   {
     buyer_id: { type: Schema.Types.ObjectId, default: null },
-    user_id: {
+    store_id: {
       type: Schema.Types.ObjectId,
-      // ref: 'user_id',  // TODO: change to the vendor user_id
-      required: true,
+      ref: 'Store', // TODO: change to the vendor user_id
+      // required: true,
     },
     order_code: { type: String, required: true, unique: true },
     order_product_list: [
@@ -26,6 +26,7 @@ const OrdersSchema = new Schema<IOrders, OrdersModel>(
           ref: 'Products',
           required: true,
         },
+        product_name: { type: String },
         product_quantity: { type: Number, required: true },
         product_price: { type: Number, required: true },
       },
