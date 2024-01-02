@@ -8,6 +8,7 @@ export type IProducts = {
   image?: { avatar?: string; avatar_public_url?: string };
   // new_image?: { avatar?: string; avatar_public_url?: string };
   productName: string;
+  _id?: string;
   categories: string;
   slug: string;
   description: string;

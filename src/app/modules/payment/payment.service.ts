@@ -1,10 +1,14 @@
 import httpStatus from 'http-status';
-import { SortOrder } from 'mongoose';
+import mongoose, { SortOrder } from 'mongoose';
 import ApiError from '../../../errors/ApiError';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IGenericResponse } from '../../../interfaces/common';
 import { IPaginationOptions } from '../../../interfaces/pagination';
+import Employe from '../employees/employees.model';
 import { Orders } from '../order/order.model';
+import { IProducts } from '../products/products.interface';
+import { Products } from '../products/products.model';
+import Store from '../store/store.model';
 import {
   IPayment,
   IPaymentFilters,
@@ -12,28 +16,110 @@ import {
 } from './payment.interface';
 import Payment from './payment.model';
 
-
-// 1. add store balance 
+// 1. add store balance
 // 2. add employees income
 // 3. update payment status to complete
 // 4. update order status to complete
 
 const createPayment = async (payload: IPayment): Promise<IPayment> => {
-  // const PaymentExist = await Payment.findOne({ order_id: payload.order_id });
-  // checking order is already used or not
-  // if (PaymentExist) {
-  //   throw new ApiError(httpStatus.CONFLICT, 'order_id is already used');
-  // }
   const storeAmount = payload.total_amount * 0.8;
   const employeeAmount = payload.total_amount * 0.2;
+  const orders = await Orders.findById(payload.order_id).populate(
+    'order_product_list.product_id'
+  );
+  const session = await mongoose.startSession();
+  if (!orders) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Orders not found');
+  }
 
-  const orders = await Orders.findById(payload.order_id);
+  try {
+    session.startTransaction();
 
-  console.log(payload); // Check the fetched order data
+    for (const orderProduct of orders.order_product_list) {
+      console.log('39', orderProduct);
+      const singleProduct = orderProduct.product_id as Partial<IProducts>;
+      console.log('53', singleProduct);
+      const isExistStore = await Store.findById(singleProduct.store_id);
 
-  // const result: any = (await Payment.create(payload)).populate('order_id');
+      if (!isExistStore) {
+        throw new ApiError(httpStatus.NOT_FOUND, 'store  is not found!');
+      }
 
-  // return result;
+      await Store.findByIdAndUpdate(
+        singleProduct.store_id,
+        {
+          $set: {
+            balance: isExistStore.balance + storeAmount,
+          },
+        },
+        { session }
+      );
+
+      await Products.findByIdAndUpdate(
+        singleProduct._id,
+        {
+          $set: {
+            quantity: singleProduct.quantity! - orderProduct.product_quantity,
+          },
+        },
+        { session }
+      );
+    }
+
+    const employee = await Employe.findById(orders.buyer_id);
+    if (!employee) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Employee not found');
+    }
+    await Employe.findByIdAndUpdate(
+      orders.buyer_id,
+      {
+        $set: {
+          income: employee.income + employeeAmount,
+        },
+      },
+      {
+        session,
+        new: true,
+      }
+    );
+    await Orders.findByIdAndUpdate(
+      payload.order_id,
+      {
+        $set: {
+          order_status: 'delivered',
+          payment_status: payload.payment_status,
+        },
+      },
+      {
+        session,
+        new: true,
+      }
+    );
+
+    const result = await Payment.create(
+      [
+        {
+          total_amount: payload.total_amount,
+          order_id: payload.order_id,
+          payment_status: payload.payment_status,
+          description: payload.description,
+        },
+      ],
+      { session }
+    );
+
+    await session.commitTransaction();
+    await session.endSession();
+
+    if (!result) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'payment is not updated ');
+    }
+    return result[0];
+  } catch (error) {
+    await session.abortTransaction();
+    await session.endSession();
+    throw error;
+  }
 };
 
 // get multiple data from Payment py pagination and searching

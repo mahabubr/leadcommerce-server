@@ -5,7 +5,7 @@ export type IPayment = {
   total_amount: number;
   order_id: Schema.Types.ObjectId;
   payment_status: IPaymentStatus;
-  description: string;
+  description?: string;
 };
 
 export type PaymentModel = Model<IPayment, Record<string, unknown>>;
