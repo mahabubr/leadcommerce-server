@@ -12,8 +12,7 @@ import {
 } from './payment.interface';
 import Payment from './payment.model';
 
-
-// 1. add store balance 
+// 1. add store balance
 // 2. add employees income
 // 3. update payment status to complete
 // 4. update order status to complete
@@ -75,6 +74,7 @@ const getAllPayment = async (
   const whereCondition = andCondition.length > 0 ? { $and: andCondition } : {};
 
   const result = await Payment.find(whereCondition)
+    .populate('order_id')
     .sort(sortCondition)
     .skip(skip)
     .limit(limit);
