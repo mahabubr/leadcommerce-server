@@ -27,11 +27,15 @@ const createPayment = async (payload: IPayment): Promise<IPayment> => {
   const orders = await Orders.findById(payload.order_id).populate(
     'order_product_list.product_id'
   );
-  const session = await mongoose.startSession();
   if (!orders) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Orders not found');
   }
 
+  if (orders.payment_status === 'completed') {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'order is already updated');
+  }
+
+  const session = await mongoose.startSession();
   try {
     session.startTransaction();
 
