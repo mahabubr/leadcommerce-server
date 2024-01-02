@@ -23,7 +23,7 @@ const createProduct = catAsync(async (req: Request, res: Response) => {
     };
     productData.image = avatar;
   }
-  console.log(productData);
+  
   const result = await ProductsServices.createProduct(productData, decoded.id);
 
   sendResponse<IProducts | null>(res, {

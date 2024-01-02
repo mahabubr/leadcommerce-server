@@ -3,7 +3,10 @@ import { AdminModel, IAdmin } from './admin.interface';
 
 const AdminSchema = new Schema<IAdmin>(
   {
-    image: { type: String, required: true },
+    image: {
+      avatar: { type: String },
+      avatar_public_url: { type: String },
+    },
     full_name: { type: String, required: true },
     email: { type: String, required: true },
     password: { type: String, required: true },
