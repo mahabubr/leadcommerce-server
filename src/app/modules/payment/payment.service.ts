@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import httpStatus from 'http-status';
 import mongoose, { SortOrder } from 'mongoose';
 import ApiError from '../../../errors/ApiError';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IGenericResponse } from '../../../interfaces/common';
 import { IPaginationOptions } from '../../../interfaces/pagination';
-import Employe from '../employees/employees.model';
+import Employe from '../employe/employe.model';
 import { Orders } from '../order/order.model';
 import { IProducts } from '../products/products.interface';
 import { Products } from '../products/products.model';

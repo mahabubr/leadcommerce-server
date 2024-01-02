@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { PipelineStage } from 'mongoose';
-import Employe from '../Employees/employees.model';
 import Admin from '../admin/admin.model';
 import { Category } from '../category/category.model';
 import { Orders } from '../order/order.model';
 import Payment from '../payment/payment.model';
 import { Products } from '../products/products.model';
 import Store from '../store/store.model';
+import Employe from '../employe/employe.model';
 
 const getUserDailySingUp = async () => {
   const today = new Date();

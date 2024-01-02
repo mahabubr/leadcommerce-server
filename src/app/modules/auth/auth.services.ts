@@ -4,11 +4,11 @@ import { Secret } from 'jsonwebtoken';
 import config from '../../../config';
 import ApiError from '../../../errors/ApiError';
 import { JwtHelper } from '../../helpers/jwtHelpers';
-import Employe from '../Employees/employees.model';
 import Admin from '../admin/admin.model';
 import Delivery from '../delivery/delivery.model';
 import Store from '../store/store.model';
 import { IAuth } from './auth.interface';
+import Employe from '../employe/employe.model';
 
 const loginUser = async (payload: IAuth) => {
   const { email, password } = payload;

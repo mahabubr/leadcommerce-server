@@ -1,8 +1,8 @@
 import express from 'express';
-import { EmployeController } from './Employees.controller';
 import multer from '../../middleware/multer';
 import { requestValidation } from '../../middleware/validateRequest';
-import { EmployeValidation } from './employees.validation';
+import { EmployeController } from './employe.controller';
+import { EmployeValidation } from './employe.validation';
 
 const router = express.Router();
 

@@ -5,7 +5,6 @@ import ApiError from '../../../errors/ApiError';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IGenericResponse } from '../../../interfaces/common';
 import { IPaginationOptions } from '../../../interfaces/pagination';
-import Employe from '../Employees/employees.model';
 import Admin from '../admin/admin.model';
 import Store from '../store/store.model';
 import {
@@ -14,6 +13,7 @@ import {
   IDeliveryFilters,
 } from './delivery.interface';
 import Delivery from './delivery.model';
+import Employe from '../employe/employe.model';
 
 const createDelivery = async (payload: IDelivery): Promise<IDelivery> => {
   const admin = await Admin.findOne({ email: payload.email });

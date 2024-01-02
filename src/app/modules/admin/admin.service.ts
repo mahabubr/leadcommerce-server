@@ -5,11 +5,11 @@ import ApiError from '../../../errors/ApiError';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IGenericResponse } from '../../../interfaces/common';
 import { IPaginationOptions } from '../../../interfaces/pagination';
-import Employe from '../Employees/employees.model';
 import Store from '../store/store.model';
 import { AdminSearchableFields } from './admin.constant';
 import { IAdmin, IAdminFilters } from './admin.interface';
 import Admin from './admin.model';
+import Employe from '../employe/employe.model';
 
 const createAdmin = async (payload: IAdmin): Promise<IAdmin> => {
   const admin = await Admin.findOne({ email: payload.email });

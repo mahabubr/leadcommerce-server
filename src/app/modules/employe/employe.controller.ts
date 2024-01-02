@@ -6,8 +6,8 @@ import { paginationFields } from '../../../constants/paginationConstants';
 import catAsync from '../../../shared/catchAsync';
 import pick from '../../../shared/pick';
 import sendResponse from '../../../shared/sendResponse';
-import { EmployeFilterableFields, IEmploye } from './employees.interfaces';
-import { EmployeServices } from './employees.services';
+import { EmployeServices } from './employe.services';
+import { EmployeFilterableFields, IEmploye } from './employe.interface';
 
 const createEmploye = catAsync(async (req: Request, res: Response) => {
   const { ...EmployeData } = req.body;
@@ -19,7 +19,6 @@ const createEmploye = catAsync(async (req: Request, res: Response) => {
     };
     EmployeData.image = avatar;
   }
-
 
   const result = await EmployeServices.createEmploye(EmployeData);
 
