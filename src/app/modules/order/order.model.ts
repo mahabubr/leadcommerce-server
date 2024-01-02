@@ -66,6 +66,10 @@ const OrdersSchema = new Schema<IOrders, OrdersModel>(
     },
     shipment_address: { type: ShipmentAddressSchema },
     shipment_date: { type: String },
+    delivery_email: {
+      type: String,
+      default: null,
+    },
   },
   {
     timestamps: true,

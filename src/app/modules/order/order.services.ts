@@ -238,12 +238,24 @@ const updateOrder = async (
   return result;
 };
 
-const updateStatus = async (payload: { data: string; id: string }) => {
+const updateStatus = async (payload: {
+  data: string;
+  id: string;
+  delivery_email: string;
+}) => {
+  const data: any = {};
+  if (payload.data) {
+    data.order_status = payload.data;
+  }
+  if (payload.delivery_email) {
+    data.delivery_email = payload.delivery_email;
+  }
+  console.log(data, payload.id, 'update status');
   const result = await Orders.updateOne(
     { _id: payload.id },
     {
       $set: {
-        order_status: payload.data,
+        ...data,
       },
     }
   );

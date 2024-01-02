@@ -63,6 +63,7 @@ export type IOrders = {
   shipment_status?: 'pending' | 'completed' | 'canceled';
   shipment_address?: shipment_address;
   shipment_date?: string;
+  delivery_email?: string;
 };
 
 export type OrdersModel = Model<IOrders, Record<string, unknown>>;

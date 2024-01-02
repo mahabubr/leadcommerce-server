@@ -8,9 +8,11 @@ const productSchema = z.object({
   product_quantity: z.number({
     required_error: 'Product quantity is required',
   }),
-  product_name: z.string({
-    required_error: 'Product name is required',
-  }).optional(),
+  product_name: z
+    .string({
+      required_error: 'Product name is required',
+    })
+    .optional(),
   product_price: z.number({
     required_error: 'price id is required',
   }),
@@ -50,6 +52,7 @@ const createOrderZodSchema = z.object({
       required_error: 'Total Amount is required',
     }),
     shipment_address: shipmentAddressSchema,
+    delivery_email: z.string().optional(),
   }),
 });
 
@@ -58,6 +61,7 @@ const updateOrderZodSchema = z.object({
     order_status: z.enum([...OrderStatus] as [string, ...string[]], {
       required_error: 'only pending/delivered/cancel is taking',
     }),
+    delivery_email: z.string().optional(),
   }),
 });
 
