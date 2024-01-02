@@ -36,9 +36,9 @@ const createPayment = async (payload: IPayment): Promise<IPayment> => {
     session.startTransaction();
 
     for (const orderProduct of orders.order_product_list) {
-      console.log('39', orderProduct);
+      // console.log('39', orderProduct);
       const singleProduct = orderProduct.product_id as Partial<IProducts>;
-      console.log('53', singleProduct);
+      // console.log('53', singleProduct);
       const isExistStore = await Store.findById(singleProduct.store_id);
 
       if (!isExistStore) {
