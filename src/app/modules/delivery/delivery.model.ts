@@ -3,7 +3,10 @@ import { DeliveryModel, IDelivery } from './delivery.interface';
 
 const DeliverySchema = new Schema<IDelivery>(
   {
-    image: { type: String, default: null },
+    image: {
+      avatar: { type: String },
+      avatar_public_url: { type: String },
+    },
     full_name: { type: String, required: true },
     position: { type: String, required: true },
     email: { type: String, required: true },

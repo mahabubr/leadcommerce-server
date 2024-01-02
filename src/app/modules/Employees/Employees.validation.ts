@@ -8,16 +8,16 @@ const createEmployeSchema = z.object({
     position: z.string({
       required_error: 'Position is required',
     }),
-    shop_id: z.string({
-      required_error: 'Store_id is required',
-    }),
+    // shop_id: z.string({
+    //   required_error: 'Store_id is required',
+    // }),
     email: z
       .string({
         required_error: 'Email is required',
       })
       .email(),
     phone: z.string().optional(),
-    image: z.string().url().optional(),
+    // image: z.string().url().optional(),
   }),
 });
 

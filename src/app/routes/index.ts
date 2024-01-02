@@ -5,13 +5,14 @@ import { CategoryRoutes } from '../modules/category/category.route';
 import { DashboardRoutes } from '../modules/dashboard/dashboard.routes';
 
 import { DeliveryRoutes } from '../modules/delivery/delivery.routes';
-import { EmployeRoutes } from '../modules/employees/employees.routes';
+
 import { EventRoutes } from '../modules/events/event.routes';
 import { OrdersRoutes } from '../modules/order/order.routes';
 import { PaymentRoutes } from '../modules/payment/payment.route';
 import { ProductsRoutes } from '../modules/products/products.routes';
 import { ShipmentRoutes } from '../modules/shipment/shipment.route';
 import { StoreRoutes } from '../modules/store/store.routes';
+import { EmployeRoutes } from '../modules/Employees/employees.routes';
 
 const router = express.Router();
 

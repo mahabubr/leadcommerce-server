@@ -15,6 +15,7 @@ import {
 import Employe from './employees.model';
 
 const createEmploye = async (payload: IEmploye): Promise<IEmploye> => {
+  console.log(payload,"🚀🚀🚀🚀🚀🚀🚀🚀🚀🚀")
   const admin = await Admin.findOne({ email: payload.email });
   const employee = await Employe.findOne({ email: payload.email });
   const store = await Store.findOne({ email: payload.email });
@@ -90,7 +91,8 @@ const getAllEmploye = async (
   const result = await Employe.find(whereCondition)
     .sort(sortCondition)
     .skip(skip)
-    .limit(limit);
+    .limit(limit)
+
 
   const total = await Employe.countDocuments(whereCondition);
 
