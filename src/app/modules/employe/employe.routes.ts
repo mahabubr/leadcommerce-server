@@ -1,13 +1,14 @@
 import express from 'express';
+import multer from '../../middleware/multer';
 import { requestValidation } from '../../middleware/validateRequest';
-import { EmployeController } from './employees.controller';
-import { EmployeValidation } from './employees.validation';
+import { EmployeController } from './employe.controller';
+import { EmployeValidation } from './employe.validation';
 
 const router = express.Router();
 
 router.post(
   '/create-employe',
-
+  multer.single('image'),
   requestValidation.validateRequest(EmployeValidation.createEmployeSchema),
   EmployeController.createEmploye
 );

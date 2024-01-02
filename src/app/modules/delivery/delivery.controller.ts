@@ -7,9 +7,19 @@ import pick from '../../../shared/pick';
 import sendResponse from '../../../shared/sendResponse';
 import { DeliveryFilterableFields, IDelivery } from './delivery.interface';
 import { DeliveryServices } from './delivery.services';
+import cloudinary from '../../../config/cloudinary';
 
 const createDelivery = catAsync(async (req: Request, res: Response) => {
   const { ...DeliveryData } = req.body;
+
+  if (req.file) {
+    const uploadedImage = await cloudinary.uploader.upload(req.file?.path);
+    const avatar = {
+      avatar: uploadedImage.secure_url,
+      avatar_public_url: uploadedImage.public_id,
+    };
+    DeliveryData.image = avatar;
+  }
 
   const result = await DeliveryServices.createDelivery(DeliveryData);
 

@@ -11,8 +11,8 @@ import {
   EmployeSearchableFields,
   IEmploye,
   IEmployeFilters,
-} from './employees.interfaces';
-import Employe from './employees.model';
+} from './employe.interface';
+import Employe from './employe.model';
 
 const createEmploye = async (payload: IEmploye): Promise<IEmploye> => {
   const admin = await Admin.findOne({ email: payload.email });

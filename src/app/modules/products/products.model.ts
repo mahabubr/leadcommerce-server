@@ -56,7 +56,7 @@ const ProductsSchema = new Schema<IProducts, ProductsModel>(
     },
     store_id: {
       type: Schema.Types.ObjectId,
-      // ref: 'Payments',  // TODO: change to the Payments table schema
+      ref: 'Store',  // TODO: change to the Payments table schema
     },
   },
   {

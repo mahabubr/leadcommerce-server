@@ -7,9 +7,18 @@ import sendResponse from '../../../shared/sendResponse';
 import { AdminFilterableFields } from './admin.constant';
 import { IAdmin } from './admin.interface';
 import { AdminServices } from './admin.service';
+import cloudinary from '../../../config/cloudinary';
 
 const createAdmin = catAsync(async (req: Request, res: Response) => {
   const { ...AdminData } = req.body;
+  if (req.file) {
+    const uploadedImage = await cloudinary.uploader.upload(req.file?.path);
+    const avatar = {
+      avatar: uploadedImage.secure_url,
+      avatar_public_url: uploadedImage.public_id,
+    };
+    AdminData.image = avatar;
+  }
 
   const result = await AdminServices.createAdmin(AdminData);
 

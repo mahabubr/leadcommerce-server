@@ -18,6 +18,7 @@ type shipment_address = {
 
 /* orders request for buyer */
 export type IOrdersReq = {
+  buyer_id?: string;
   order_id: string;
   user_Id: Types.ObjectId;
   order_product_list: IOrdersProductList[];

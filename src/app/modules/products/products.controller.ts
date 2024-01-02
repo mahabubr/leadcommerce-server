@@ -23,6 +23,7 @@ const createProduct = catAsync(async (req: Request, res: Response) => {
     };
     productData.image = avatar;
   }
+  
   const result = await ProductsServices.createProduct(productData, decoded.id);
 
   sendResponse<IProducts | null>(res, {
@@ -35,14 +36,14 @@ const createProduct = catAsync(async (req: Request, res: Response) => {
 
 // * get all product
 const getAllProducts = catAsync(async (req: Request, res: Response) => {
-  const decoded = jwt.decode(req.headers.authorization as string) as JwtPayload;
+  // const decoded = jwt.decode(req.headers.authorization as string) as JwtPayload;
   const filters = pick(req.query, ProductFilterableFields);
   const paginationOptions = pick(req.query, paginationFields);
 
   const result = await ProductsServices.getAllProducts(
     filters,
     paginationOptions,
-    decoded.id
+    // decoded.id
   );
 
   sendResponse<IProducts[]>(res, {

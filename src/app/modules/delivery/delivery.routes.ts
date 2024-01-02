@@ -1,9 +1,14 @@
 import express from 'express';
 import { DeliveryController } from './delivery.controller';
+import multer from '../../middleware/multer';
 
 const router = express.Router();
 
-router.post('/create-delivery', DeliveryController.createDelivery);
+router.post(
+  '/create-delivery',
+  multer.single('image'),
+  DeliveryController.createDelivery
+);
 
 router.patch('/update', DeliveryController.updateDelivery);
 
