@@ -7,6 +7,8 @@ import { OrderValidation } from './order.validation';
 
 const router = express.Router();
 
+router.get('/orders-for-store', auth(ENUM_ROLE.STORE), OrdersController.getAllOrdersForStore);
+router.get('/orders-for-deliveryman', auth(ENUM_ROLE.DELIVERY), OrdersController.getAllOrdersForDeliveryMan);
 router.post(
   '/',
   auth(ENUM_ROLE.EMPLOYEE),

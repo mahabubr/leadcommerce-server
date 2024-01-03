@@ -91,6 +91,52 @@ const deleteOrder = catAsync(async (req: Request, res: Response) => {
   });
 });
 
+// * get all Orders
+const getAllOrdersForStore = catAsync(async (req: Request, res: Response) => {
+  const filters = pick(req.query, OrderFilterableFields);
+  const paginationOptions = pick(req.query, paginationFields);
+
+  // const decoded = jwt.decode(req.headers.authorization as string) as JwtPayload;
+
+  const result = await OrdersServices.getAllOrdersForStore(
+    filters,
+    paginationOptions
+    // decoded.id
+  );
+
+  sendResponse<IOrders[]>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'All order retrieved for store successfully',
+    meta: result?.meta,
+    data: result?.data,
+  });
+});
+
+const getAllOrdersForDeliveryMan = catAsync(
+  async (req: Request, res: Response) => {
+    const filters = pick(req.query, OrderFilterableFields);
+    const paginationOptions = pick(req.query, paginationFields);
+    const decoded = jwt.decode(
+      req.headers.authorization as string
+    ) as JwtPayload;
+
+    const result = await OrdersServices.getAllOrdersForDeliveryMan(
+      filters,
+      paginationOptions,
+      decoded.email
+    );
+
+    sendResponse<IOrders[]>(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'All order retrieved for Delivery successfully',
+      meta: result?.meta,
+      data: result?.data,
+    });
+  }
+);
+
 export const OrdersController = {
   createOrder,
   getAllOrders,
@@ -98,4 +144,6 @@ export const OrdersController = {
   updateOrder,
   deleteOrder,
   updateStatus,
+  getAllOrdersForStore,
+  getAllOrdersForDeliveryMan,
 };

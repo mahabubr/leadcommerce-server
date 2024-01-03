@@ -202,7 +202,7 @@ const getAllOrders = async (
 
 // * get single Orders
 const getSingleOrder = async (id: string): Promise<IOrders | null> => {
-  const result = await Orders.findById(id)
+  const result = await Orders.findById(id);
   return result;
 };
 
@@ -269,6 +269,164 @@ const deleteOrder = async (id: string): Promise<IOrders | null> => {
   return result;
 };
 
+const getAllOrdersForStore = async (
+  filters: Partial<IOrdersFilters>,
+  paginationOptions: IPaginationOptions,
+): Promise<IGenericResponse<IOrders[]>> => {
+  const { searchTerm, ...filtersData } = filters;
+  const { page, limit, skip, sortBy, sortOrder } =
+    paginationHelpers.calculatePagination(paginationOptions);
+
+  const andCondition = [];
+  if (searchTerm) {
+    andCondition.push({
+      $or: OrderSearchableFields.map(field => ({
+        [field]: {
+          $regex: searchTerm,
+          $options: 'i',
+        },
+      })),
+    });
+  }
+
+  if (Object.keys(filtersData).length) {
+    andCondition.push({
+      $and: Object.entries(filtersData).map(([field, value]) => ({
+        [field]: value,
+      })),
+    });
+  }
+
+  const sortCondition: { [key: string]: SortOrder } = {};
+
+  if (sortBy && sortOrder) {
+    sortCondition[sortBy] = sortOrder;
+  }
+
+  const whereCondition = andCondition.length > 0 ? { $and: andCondition } : {};
+
+  const result = await Orders.find(whereCondition)
+    .sort(sortCondition)
+    .skip(skip)
+    .limit(limit);
+
+  const total = await Orders.countDocuments(whereCondition);
+
+  return {
+    meta: {
+      page,
+      limit,
+      total,
+    },
+    data: result,
+  };
+};
+
+// const getAllOrdersForStore = async (
+//   filters: Partial<IOrdersFilters>,
+//   paginationOptions: IPaginationOptions,
+//   store_id: string
+// ): Promise<IOrders[]> => {
+//   console.log(store_id);
+
+//   const pipeline = [
+//     {
+//       $unwind: '$order_product_list', // Unwind the order_product_list array
+//     },
+//     {
+//       $lookup: {
+//         from: 'products', // Product Schema for joining
+//         let: {
+//           productId: '$order_product_list.product_id',
+//           store_id: store_id,
+//         },
+//         pipeline: [
+//           {
+//             $match: {
+//               $expr: {
+//                 $and: [
+//                   { $eq: ['$_id', '$$productId'] }, // Match product_id
+//                   { $eq: ['$store_id', '$$store_id'] }, // Match store_id
+//                 ],
+//               },
+//             },
+//           },
+//         ],
+//         as: 'product_details',
+//       },
+//     },
+//   ];
+
+//   const storeOrders = await Orders.aggregate(
+//     pipeline as PipelineStage[]
+//   ).exec();
+
+//   return storeOrders;
+// };
+const getAllOrdersForDeliveryMan = async (
+  filters: Partial<IOrdersFilters>,
+  paginationOptions: IPaginationOptions,
+  delivery_email: string
+): Promise<IGenericResponse<IOrders[]>> => {
+  const { searchTerm, ...filtersData } = filters;
+  const { page, limit, skip, sortBy, sortOrder } =
+    paginationHelpers.calculatePagination(paginationOptions);
+
+  console.log(delivery_email);
+
+  const andCondition = [];
+  if (searchTerm) {
+    andCondition.push({
+      $or: OrderSearchableFields.map(field => ({
+        [field]: {
+          $regex: searchTerm,
+          $options: 'i',
+        },
+      })),
+    });
+  }
+
+  if (delivery_email) {
+    andCondition.push({
+      delivery_email: {
+        $eq: delivery_email,
+      },
+    });
+  }
+
+  if (Object.keys(filtersData).length) {
+    andCondition.push({
+      $and: Object.entries(filtersData).map(([field, value]) => ({
+        [field]: value,
+      })),
+    });
+  }
+
+  const sortCondition: { [key: string]: SortOrder } = {};
+
+  if (sortBy && sortOrder) {
+    sortCondition[sortBy] = sortOrder;
+  }
+
+  const whereCondition = andCondition.length > 0 ? { $and: andCondition } : {};
+
+  const result = await Orders.find(whereCondition)
+    .sort(sortCondition)
+    .skip(skip)
+    .limit(limit);
+
+  const total = await Orders.countDocuments(whereCondition);
+
+  return {
+    meta: {
+      page,
+      limit,
+      total,
+    },
+    data: result,
+  };
+};
+
 export const OrdersServices = {
   createOrder,
   getAllOrders,
@@ -276,4 +434,6 @@ export const OrdersServices = {
   updateOrder,
   deleteOrder,
   updateStatus,
+  getAllOrdersForStore,
+  getAllOrdersForDeliveryMan,
 };

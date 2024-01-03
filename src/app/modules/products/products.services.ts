@@ -118,6 +118,73 @@ const deleteProduct = async (id: string): Promise<IProducts | null> => {
   return result;
 };
 
+const getAllProductsForStore = async (
+  filters: Partial<IProductsFilters>,
+  paginationOptions: IPaginationOptions,
+  store_id: string
+): Promise<IGenericResponse<IProducts[]>> => {
+  const { searchTerm, ...filtersData } = filters;
+  const { page, limit, skip, sortBy, sortOrder } =
+    paginationHelpers.calculatePagination(paginationOptions);
+
+  console.log(store_id);
+
+  const andCondition = [];
+
+  if (searchTerm) {
+    andCondition.push({
+      $or: ProductSearchableFields.map(field => ({
+        [field]: {
+          $regex: searchTerm,
+          $options: 'i',
+        },
+      })),
+    });
+  }
+
+  if (store_id) {
+    andCondition.push({
+      store_id: {
+        $eq: store_id,
+      },
+    });
+  }
+
+  if (Object.keys(filtersData).length) {
+    andCondition.push({
+      $and: Object.entries(filtersData).map(([field, value]) => ({
+        [field]: value,
+      })),
+    });
+  }
+
+  const sortCondition: { [key: string]: SortOrder } = {};
+
+  if (sortBy && sortOrder) {
+    sortCondition[sortBy] = sortOrder;
+  }
+
+  const whereCondition =
+    andCondition.length > 0 ? { $and: andCondition } : { status: 'active' };
+
+  const result = await Products.find(whereCondition)
+    .populate('store_id')
+    .sort(sortCondition)
+    .skip(skip)
+    .limit(limit);
+
+  const total = await Products.countDocuments(whereCondition);
+
+  return {
+    meta: {
+      page,
+      limit,
+      total,
+    },
+    data: result,
+  };
+};
+
 export const ProductsServices = {
   createProduct,
   updateProduct,
@@ -125,4 +192,5 @@ export const ProductsServices = {
   getSingleProduct,
   getAllStoreProduct,
   getAllProducts,
+  getAllProductsForStore,
 };
