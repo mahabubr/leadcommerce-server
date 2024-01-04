@@ -30,11 +30,11 @@ const ApiError_1 = __importDefault(require("../../../errors/ApiError"));
 const paginationHelper_1 = require("../../../helpers/paginationHelper");
 const admin_model_1 = __importDefault(require("../admin/admin.model"));
 const store_model_1 = __importDefault(require("../store/store.model"));
-const employees_interfaces_1 = require("./employees.interfaces");
-const employees_model_1 = __importDefault(require("./employees.model"));
+const employe_interface_1 = require("./employe.interface");
+const employe_model_1 = __importDefault(require("./employe.model"));
 const createEmploye = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const admin = yield admin_model_1.default.findOne({ email: payload.email });
-    const employee = yield employees_model_1.default.findOne({ email: payload.email });
+    const employee = yield employe_model_1.default.findOne({ email: payload.email });
     const store = yield store_model_1.default.findOne({ email: payload.email });
     // checking Email is already used or not
     if (admin) {
@@ -57,7 +57,7 @@ const createEmploye = (payload) => __awaiter(void 0, void 0, void 0, function* (
         position,
         shop_id,
     };
-    const result = yield employees_model_1.default.create(createPayload);
+    const result = yield employe_model_1.default.create(createPayload);
     return result;
 });
 // get multiple data from Employe py pagination and searching
@@ -67,7 +67,7 @@ const getAllEmploye = (filters, paginationOptions) => __awaiter(void 0, void 0, 
     const andCondition = [];
     if (searchTerm) {
         andCondition.push({
-            $or: employees_interfaces_1.EmployeSearchableFields.map(field => ({
+            $or: employe_interface_1.EmployeSearchableFields.map(field => ({
                 [field]: {
                     $regex: searchTerm,
                     $options: 'i',
@@ -87,11 +87,11 @@ const getAllEmploye = (filters, paginationOptions) => __awaiter(void 0, void 0, 
         sortCondition[sortBy] = sortOrder;
     }
     const whereCondition = andCondition.length > 0 ? { $and: andCondition } : {};
-    const result = yield employees_model_1.default.find(whereCondition)
+    const result = yield employe_model_1.default.find(whereCondition)
         .sort(sortCondition)
         .skip(skip)
         .limit(limit);
-    const total = yield employees_model_1.default.countDocuments(whereCondition);
+    const total = yield employe_model_1.default.countDocuments(whereCondition);
     return {
         meta: {
             page,
@@ -103,7 +103,7 @@ const getAllEmploye = (filters, paginationOptions) => __awaiter(void 0, void 0, 
 });
 // * get single Employes
 const getSingleEmploye = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield employees_model_1.default.findById(id);
+    const result = yield employe_model_1.default.findById(id);
     if (!result) {
         throw new ApiError_1.default(http_status_1.default.NOT_FOUND, 'Employe not found');
     }
@@ -111,27 +111,27 @@ const getSingleEmploye = (id) => __awaiter(void 0, void 0, void 0, function* () 
 });
 // * update single Product
 const updateEmploye = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {
-    const isExist = yield employees_model_1.default.findById(id);
+    const isExist = yield employe_model_1.default.findById(id);
     if (!isExist) {
         throw new ApiError_1.default(http_status_1.default.NOT_FOUND, 'Employe is not found');
     }
     if (payload.email) {
-        const isExist = yield employees_model_1.default.find({ email: payload.email });
+        const isExist = yield employe_model_1.default.find({ email: payload.email });
         if (isExist)
             throw new ApiError_1.default(http_status_1.default.CONFLICT, 'Email is already in used');
     }
-    const result = yield employees_model_1.default.findOneAndUpdate({ _id: id }, payload, {
+    const result = yield employe_model_1.default.findOneAndUpdate({ _id: id }, payload, {
         new: true,
     });
     return result;
 });
 // * delete single product
 const deleteEmploye = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const isExist = yield employees_model_1.default.findById(id);
+    const isExist = yield employe_model_1.default.findById(id);
     if (!isExist) {
         throw new ApiError_1.default(http_status_1.default.NOT_FOUND, 'Employe not found');
     }
-    const result = yield employees_model_1.default.findByIdAndDelete(id);
+    const result = yield employe_model_1.default.findByIdAndDelete(id);
     return result;
 });
 exports.EmployeServices = {

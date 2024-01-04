@@ -10,16 +10,16 @@ const createEmployeSchema = zod_1.z.object({
         position: zod_1.z.string({
             required_error: 'Position is required',
         }),
-        shop_id: zod_1.z.string({
-            required_error: 'Store_id is required',
-        }),
+        // shop_id: z.string({
+        //   required_error: 'Store_id is required',
+        // }),
         email: zod_1.z
             .string({
             required_error: 'Email is required',
         })
             .email(),
         phone: zod_1.z.string().optional(),
-        image: zod_1.z.string().url().optional(),
+        // image: z.string().url().optional(),
     }),
 });
 const updateEmployeSchema = zod_1.z.object({

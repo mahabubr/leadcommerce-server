@@ -12,8 +12,9 @@ export type IEventTopic = {
 };
 
 export type IEvent = {
+  image?: { avatar?: string; avatar_public_url?: string };
   eventTitle: string;
-  eventDate: Date;
+  eventDate: string;
   organizer: string;
   status: boolean;
   like: number;

@@ -37,7 +37,7 @@ const createProduct = (payload, storeId) => __awaiter(void 0, void 0, void 0, fu
     return result;
 });
 // * get all products
-const getAllProducts = (filters, paginationOptions, id) => __awaiter(void 0, void 0, void 0, function* () {
+const getAllProducts = (filters, paginationOptions) => __awaiter(void 0, void 0, void 0, function* () {
     const { searchTerm } = filters, filtersData = __rest(filters, ["searchTerm"]);
     const { page, limit, skip, sortBy, sortOrder } = paginationHelper_1.paginationHelpers.calculatePagination(paginationOptions);
     const andCondition = [];
@@ -62,8 +62,9 @@ const getAllProducts = (filters, paginationOptions, id) => __awaiter(void 0, voi
     if (sortBy && sortOrder) {
         sortCondition[sortBy] = sortOrder;
     }
-    const whereCondition = andCondition.length > 0 ? { $and: andCondition } : { store_id: id };
+    const whereCondition = andCondition.length > 0 ? { $and: andCondition } : { status: 'active' };
     const result = yield products_model_1.Products.find(whereCondition)
+        .populate('store_id')
         .sort(sortCondition)
         .skip(skip)
         .limit(limit);
@@ -107,6 +108,59 @@ const deleteProduct = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield products_model_1.Products.findByIdAndDelete(id);
     return result;
 });
+const getAllProductsForStore = (filters, paginationOptions, store_id) => __awaiter(void 0, void 0, void 0, function* () {
+    const { searchTerm } = filters, filtersData = __rest(filters, ["searchTerm"]);
+    const { page, limit, skip, sortBy, sortOrder } = paginationHelper_1.paginationHelpers.calculatePagination(paginationOptions);
+    const andCondition = [];
+    if (searchTerm) {
+        andCondition.push({
+            $or: products_constant_1.ProductSearchableFields.map(field => ({
+                [field]: {
+                    $regex: searchTerm,
+                    $options: 'i',
+                },
+            })),
+        });
+    }
+    if (store_id) {
+        andCondition.push({
+            store_id: {
+                $eq: store_id,
+            },
+        });
+    }
+    if (Object.keys(filtersData).length) {
+        andCondition.push({
+            $and: Object.entries(filtersData).map(([field, value]) => ({
+                [field]: value,
+            })),
+        });
+    }
+    const sortCondition = {};
+    if (sortBy && sortOrder) {
+        sortCondition[sortBy] = sortOrder;
+    }
+    const whereCondition = andCondition.length > 0 ? { $and: andCondition } : { status: 'active' };
+    const result = yield products_model_1.Products.find(whereCondition)
+        .populate('store_id')
+        .sort(sortCondition)
+        .skip(skip)
+        .limit(limit);
+    const total = yield products_model_1.Products.countDocuments(whereCondition);
+    return {
+        meta: {
+            page,
+            limit,
+            total,
+        },
+        data: result,
+    };
+});
+const getSingleStoreProducts = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    return yield products_model_1.Products.find({
+        store_id: id,
+    }).limit(3);
+});
 exports.ProductsServices = {
     createProduct,
     updateProduct,
@@ -114,4 +168,6 @@ exports.ProductsServices = {
     getSingleProduct,
     getAllStoreProduct,
     getAllProducts,
+    getAllProductsForStore,
+    getSingleStoreProducts,
 };

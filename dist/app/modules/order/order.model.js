@@ -12,11 +12,6 @@ const ShipmentAddressSchema = new mongoose_1.Schema({
 });
 const OrdersSchema = new mongoose_1.Schema({
     buyer_id: { type: mongoose_1.Schema.Types.ObjectId, default: null },
-    store_id: {
-        type: mongoose_1.Schema.Types.ObjectId,
-        ref: 'Store', // TODO: change to the vendor user_id
-        // required: true,
-    },
     order_code: { type: String, required: true, unique: true },
     order_product_list: [
         {
@@ -25,6 +20,7 @@ const OrdersSchema = new mongoose_1.Schema({
                 ref: 'Products',
                 required: true,
             },
+            product_name: { type: String },
             product_quantity: { type: Number, required: true },
             product_price: { type: Number, required: true },
         },
@@ -64,6 +60,10 @@ const OrdersSchema = new mongoose_1.Schema({
     },
     shipment_address: { type: ShipmentAddressSchema },
     shipment_date: { type: String },
+    delivery_email: {
+        type: String,
+        default: null,
+    },
 }, {
     timestamps: true,
     toJSON: {

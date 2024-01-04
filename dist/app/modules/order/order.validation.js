@@ -10,6 +10,11 @@ const productSchema = zod_1.z.object({
     product_quantity: zod_1.z.number({
         required_error: 'Product quantity is required',
     }),
+    product_name: zod_1.z
+        .string({
+        required_error: 'Product name is required',
+    })
+        .optional(),
     product_price: zod_1.z.number({
         required_error: 'price id is required',
     }),
@@ -47,6 +52,7 @@ const createOrderZodSchema = zod_1.z.object({
             required_error: 'Total Amount is required',
         }),
         shipment_address: shipmentAddressSchema,
+        delivery_email: zod_1.z.string().optional(),
     }),
 });
 const updateOrderZodSchema = zod_1.z.object({
@@ -54,6 +60,7 @@ const updateOrderZodSchema = zod_1.z.object({
         order_status: zod_1.z.enum([...order_constant_1.OrderStatus], {
             required_error: 'only pending/delivered/cancel is taking',
         }),
+        delivery_email: zod_1.z.string().optional(),
     }),
 });
 exports.OrderValidation = {

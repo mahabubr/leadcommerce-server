@@ -8,16 +8,18 @@ import { IPaginationOptions } from '../../../interfaces/pagination';
 import Admin from '../admin/admin.model';
 import Store from '../store/store.model';
 import {
-  EmployeSearchableFields,
-  IEmploye,
-  IEmployeFilters,
-} from './employees.interfaces';
-import Employe from './employees.model';
+  DeliverySearchableFields,
+  IDelivery,
+  IDeliveryFilters,
+} from './delivery.interface';
+import Delivery from './delivery.model';
+import Employe from '../employe/employe.model';
 
-const createEmploye = async (payload: IEmploye): Promise<IEmploye> => {
+const createDelivery = async (payload: IDelivery): Promise<IDelivery> => {
   const admin = await Admin.findOne({ email: payload.email });
   const employee = await Employe.findOne({ email: payload.email });
   const store = await Store.findOne({ email: payload.email });
+  const delivery = await Delivery.findOne({ email: payload.email });
 
   // checking Email is already used or not
   if (admin) {
@@ -29,31 +31,33 @@ const createEmploye = async (payload: IEmploye): Promise<IEmploye> => {
   if (store) {
     throw new ApiError(httpStatus.CONFLICT, 'Store is already used');
   }
+  if (delivery) {
+    throw new ApiError(httpStatus.CONFLICT, 'Delivery is already used');
+  }
 
-  const { email, full_name, image, password, phone, position, shop_id } =
+  const { address, email, full_name, image, password, phone, position } =
     payload;
 
   const hash = await bcrypt.hash(password, 12);
 
   const createPayload = {
+    address,
     email,
     full_name,
     image,
     password: hash,
     phone,
     position,
-    shop_id,
   };
 
-  const result = await Employe.create(createPayload);
+  const result = await Delivery.create(createPayload);
   return result;
 };
 
-// get multiple data from Employe py pagination and searching
-const getAllEmploye = async (
-  filters: Partial<IEmployeFilters>,
+const getAllDelivery = async (
+  filters: Partial<IDeliveryFilters>,
   paginationOptions: IPaginationOptions
-): Promise<IGenericResponse<IEmploye[]>> => {
+): Promise<IGenericResponse<IDelivery[]>> => {
   const { searchTerm, ...filtersData } = filters;
   const { page, limit, skip, sortBy, sortOrder } =
     paginationHelpers.calculatePagination(paginationOptions);
@@ -62,7 +66,7 @@ const getAllEmploye = async (
 
   if (searchTerm) {
     andCondition.push({
-      $or: EmployeSearchableFields.map(field => ({
+      $or: DeliverySearchableFields.map(field => ({
         [field]: {
           $regex: searchTerm,
           $options: 'i',
@@ -87,12 +91,12 @@ const getAllEmploye = async (
 
   const whereCondition = andCondition.length > 0 ? { $and: andCondition } : {};
 
-  const result = await Employe.find(whereCondition)
+  const result = await Delivery.find(whereCondition)
     .sort(sortCondition)
     .skip(skip)
     .limit(limit);
 
-  const total = await Employe.countDocuments(whereCondition);
+  const total = await Delivery.countDocuments(whereCondition);
 
   return {
     meta: {
@@ -104,55 +108,52 @@ const getAllEmploye = async (
   };
 };
 
-// * get single Employes
-const getSingleEmploye = async (id: string): Promise<IEmploye | null> => {
-  const result = await Employe.findById(id);
+const getSingleDelivery = async (id: string): Promise<IDelivery | null> => {
+  const result = await Delivery.findById(id);
   if (!result) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Employe not found');
+    throw new ApiError(httpStatus.NOT_FOUND, 'Delivery not found');
   }
   return result;
 };
 
-// * update single Product
-const updateEmploye = async (
+const updateDelivery = async (
   id: string,
-  payload: Partial<IEmploye>
-): Promise<IEmploye | null> => {
-  const isExist = await Employe.findById(id);
+  payload: Partial<IDelivery>
+): Promise<IDelivery | null> => {
+  const isExist = await Delivery.findById(id);
 
   if (!isExist) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Employe is not found');
+    throw new ApiError(httpStatus.NOT_FOUND, 'Delivery is not found');
   }
 
   if (payload.email) {
-    const isExist = await Employe.find({ email: payload.email });
+    const isExist = await Delivery.find({ email: payload.email });
     if (isExist)
       throw new ApiError(httpStatus.CONFLICT, 'Email is already in used');
   }
 
-  const result = await Employe.findOneAndUpdate({ _id: id }, payload, {
+  const result = await Delivery.findOneAndUpdate({ _id: id }, payload, {
     new: true,
   });
 
   return result;
 };
 
-// * delete single product
-const deleteEmploye = async (id: string): Promise<IEmploye | null> => {
-  const isExist = await Employe.findById(id);
+const deleteDelivery = async (id: string): Promise<IDelivery | null> => {
+  const isExist = await Delivery.findById(id);
 
   if (!isExist) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Employe not found');
+    throw new ApiError(httpStatus.NOT_FOUND, 'Delivery not found');
   }
 
-  const result = await Employe.findByIdAndDelete(id);
+  const result = await Delivery.findByIdAndDelete(id);
   return result;
 };
 
-export const EmployeServices = {
-  createEmploye,
-  getAllEmploye,
-  getSingleEmploye,
-  updateEmploye,
-  deleteEmploye,
+export const DeliveryServices = {
+  deleteDelivery,
+  updateDelivery,
+  getSingleDelivery,
+  createDelivery,
+  getAllDelivery,
 };

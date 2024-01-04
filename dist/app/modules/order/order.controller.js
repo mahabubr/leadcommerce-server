@@ -25,6 +25,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.OrdersController = void 0;
 const http_status_1 = __importDefault(require("http-status"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const paginationConstants_1 = require("../../../constants/paginationConstants");
 const catchAsync_1 = __importDefault(require("../../../shared/catchAsync"));
 const pick_1 = __importDefault(require("../../../shared/pick"));
@@ -34,7 +35,8 @@ const order_services_1 = require("./order.services");
 // * create Order
 const createOrder = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const OrderData = __rest(req.body, []);
-    const result = yield order_services_1.OrdersServices.createOrder(OrderData);
+    const decoded = jsonwebtoken_1.default.decode(req.headers.authorization);
+    const result = yield order_services_1.OrdersServices.createOrder(OrderData, decoded.id);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
@@ -99,6 +101,35 @@ const deleteOrder = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, vo
         data: result,
     });
 }));
+// * get all Orders
+const getAllOrdersForStore = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const filters = (0, pick_1.default)(req.query, order_constant_1.OrderFilterableFields);
+    const paginationOptions = (0, pick_1.default)(req.query, paginationConstants_1.paginationFields);
+    // const decoded = jwt.decode(req.headers.authorization as string) as JwtPayload;
+    const result = yield order_services_1.OrdersServices.getAllOrdersForStore(filters, paginationOptions
+    // decoded.id
+    );
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'All order retrieved for store successfully',
+        meta: result === null || result === void 0 ? void 0 : result.meta,
+        data: result === null || result === void 0 ? void 0 : result.data,
+    });
+}));
+const getAllOrdersForDeliveryMan = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const filters = (0, pick_1.default)(req.query, order_constant_1.OrderFilterableFields);
+    const paginationOptions = (0, pick_1.default)(req.query, paginationConstants_1.paginationFields);
+    const decoded = jsonwebtoken_1.default.decode(req.headers.authorization);
+    const result = yield order_services_1.OrdersServices.getAllOrdersForDeliveryMan(filters, paginationOptions, decoded.email);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'All order retrieved for Delivery successfully',
+        meta: result === null || result === void 0 ? void 0 : result.meta,
+        data: result === null || result === void 0 ? void 0 : result.data,
+    });
+}));
 exports.OrdersController = {
     createOrder,
     getAllOrders,
@@ -106,4 +137,6 @@ exports.OrdersController = {
     updateOrder,
     deleteOrder,
     updateStatus,
+    getAllOrdersForStore,
+    getAllOrdersForDeliveryMan,
 };

@@ -2,7 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = require("mongoose");
 const AdminSchema = new mongoose_1.Schema({
-    image: { type: String, required: true },
+    image: {
+        avatar: { type: String },
+        avatar_public_url: { type: String },
+    },
     full_name: { type: String, required: true },
     email: { type: String, required: true },
     password: { type: String, required: true },

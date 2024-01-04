@@ -28,13 +28,13 @@ const bcrypt_1 = __importDefault(require("bcrypt"));
 const http_status_1 = __importDefault(require("http-status"));
 const ApiError_1 = __importDefault(require("../../../errors/ApiError"));
 const paginationHelper_1 = require("../../../helpers/paginationHelper");
-const employees_model_1 = __importDefault(require("../employees/employees.model"));
 const store_model_1 = __importDefault(require("../store/store.model"));
 const admin_constant_1 = require("./admin.constant");
 const admin_model_1 = __importDefault(require("./admin.model"));
+const employe_model_1 = __importDefault(require("../employe/employe.model"));
 const createAdmin = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const admin = yield admin_model_1.default.findOne({ email: payload.email });
-    const employee = yield employees_model_1.default.findOne({ email: payload.email });
+    const employee = yield employe_model_1.default.findOne({ email: payload.email });
     const store = yield store_model_1.default.findOne({ email: payload.email });
     // checking Email is already used or not
     if (admin) {

@@ -31,9 +31,25 @@ const pick_1 = __importDefault(require("../../../shared/pick"));
 const sendResponse_1 = __importDefault(require("../../../shared/sendResponse"));
 const event_constant_1 = require("./event.constant");
 const event_service_1 = require("./event.service");
+const cloudinary_1 = __importDefault(require("../../../config/cloudinary"));
+const dayjs_1 = __importDefault(require("dayjs"));
 // *--[create event]--
 const createEvent = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const EventData = __rest(req.body, []);
+    var _a;
+    const EventData = JSON.parse(req.body.data);
+    if (req.file) {
+        const uploadedImage = yield cloudinary_1.default.uploader.upload((_a = req.file) === null || _a === void 0 ? void 0 : _a.path);
+        console.log(uploadedImage);
+        const avatar = {
+            avatar: uploadedImage.secure_url,
+            avatar_public_url: uploadedImage.public_id,
+        };
+        EventData.image = avatar;
+    }
+    EventData.eventDate = (0, dayjs_1.default)(EventData.eventDate).format('YYYY-MMM-DD').toUpperCase();
+    EventData.startTime = (0, dayjs_1.default)(EventData.startTime).format('HH:mm');
+    EventData.endTime = (0, dayjs_1.default)(EventData.endTime).format('HH:mm');
+    console.log(EventData);
     const result = yield event_service_1.EventService.createEvent(EventData);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,

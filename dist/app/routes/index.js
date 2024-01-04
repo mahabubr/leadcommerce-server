@@ -8,13 +8,15 @@ const admin_route_1 = require("../modules/admin/admin.route");
 const auth_routes_1 = require("../modules/auth/auth.routes");
 const category_route_1 = require("../modules/category/category.route");
 const dashboard_routes_1 = require("../modules/dashboard/dashboard.routes");
+const delivery_routes_1 = require("../modules/delivery/delivery.routes");
 const event_routes_1 = require("../modules/events/event.routes");
+const faq_route_1 = require("../modules/faq/faq.route");
 const order_routes_1 = require("../modules/order/order.routes");
 const payment_route_1 = require("../modules/payment/payment.route");
 const products_routes_1 = require("../modules/products/products.routes");
 const shipment_route_1 = require("../modules/shipment/shipment.route");
 const store_routes_1 = require("../modules/store/store.routes");
-const employees_routes_1 = require("../modules/employees/employees.routes");
+const employe_routes_1 = require("../modules/employe/employe.routes");
 const router = express_1.default.Router();
 const moduleRoutes = [
     {
@@ -27,7 +29,7 @@ const moduleRoutes = [
     },
     {
         path: '/employee',
-        route: employees_routes_1.EmployeRoutes,
+        route: employe_routes_1.EmployeRoutes,
     },
     {
         path: '/admin',
@@ -60,6 +62,14 @@ const moduleRoutes = [
     {
         path: '/event',
         route: event_routes_1.EventRoutes,
+    },
+    {
+        path: '/delivery',
+        route: delivery_routes_1.DeliveryRoutes,
+    },
+    {
+        path: '/faq',
+        route: faq_route_1.FaqRoutes,
     },
 ];
 moduleRoutes.forEach(route => router.use(route.path, route.route));

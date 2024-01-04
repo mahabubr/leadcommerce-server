@@ -5,11 +5,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AdminRoutes = void 0;
 const express_1 = __importDefault(require("express"));
+const multer_1 = __importDefault(require("../../middleware/multer"));
 const validateRequest_1 = require("../../middleware/validateRequest");
 const admin_controller_1 = require("./admin.controller");
 const admin_validation_1 = require("./admin.validation");
 const router = express_1.default.Router();
-router.post('/create-admin', validateRequest_1.requestValidation.validateRequest(admin_validation_1.AdminValidation.createAdminSchema), admin_controller_1.AdminController.createAdmin);
+router.post('/create-admin', multer_1.default.single('image'), validateRequest_1.requestValidation.validateRequest(admin_validation_1.AdminValidation.createAdminSchema), admin_controller_1.AdminController.createAdmin);
 // update Admin
 router.patch('/:id', admin_controller_1.AdminController.updateAdmin);
 // get single data from single Admin

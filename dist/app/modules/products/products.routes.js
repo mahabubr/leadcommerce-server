@@ -5,10 +5,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProductsRoutes = void 0;
 const express_1 = __importDefault(require("express"));
+const role_1 = require("../../../enum/role");
+const auth_1 = __importDefault(require("../../middleware/auth"));
 const multer_1 = __importDefault(require("../../middleware/multer"));
 const products_controller_1 = require("./products.controller");
 const router = express_1.default.Router();
-router.post('/', multer_1.default.single('image'), products_controller_1.ProductsController.createProduct);
+router.get('/store', (0, auth_1.default)(role_1.ENUM_ROLE.STORE), products_controller_1.ProductsController.getAllProductsForStore);
+router.get('/single-store/:id', products_controller_1.ProductsController.getSingleStoreProducts);
+router.post('/', (0, auth_1.default)(role_1.ENUM_ROLE.STORE), multer_1.default.single('image'), products_controller_1.ProductsController.createProduct);
 router.get('/', products_controller_1.ProductsController.getAllProducts);
 router.get('/my-product', products_controller_1.ProductsController.getAllStoreProduct);
 router.get('/:id', products_controller_1.ProductsController.getSingleProduct);

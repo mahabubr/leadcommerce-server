@@ -1,15 +1,24 @@
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
 import jwt, { JwtPayload } from 'jsonwebtoken';
+import cloudinary from '../../../config/cloudinary';
 import { paginationFields } from '../../../constants/paginationConstants';
 import catAsync from '../../../shared/catchAsync';
 import pick from '../../../shared/pick';
 import sendResponse from '../../../shared/sendResponse';
-import { EmployeFilterableFields, IEmploye } from './employees.interfaces';
-import { EmployeServices } from './employees.services';
+import { EmployeServices } from './employe.services';
+import { EmployeFilterableFields, IEmploye } from './employe.interface';
 
 const createEmploye = catAsync(async (req: Request, res: Response) => {
   const { ...EmployeData } = req.body;
+  if (req.file) {
+    const uploadedImage = await cloudinary.uploader.upload(req.file?.path);
+    const avatar = {
+      avatar: uploadedImage.secure_url,
+      avatar_public_url: uploadedImage.public_id,
+    };
+    EmployeData.image = avatar;
+  }
 
   const result = await EmployeServices.createEmploye(EmployeData);
 

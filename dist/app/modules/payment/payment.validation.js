@@ -13,15 +13,6 @@ const createPaymentSchema = zod_1.z.object({
         payment_status: zod_1.z.string({
             required_error: 'payment_status is required',
         }),
-        payment_code: zod_1.z.string({
-            required_error: 'payment_code is required',
-        }),
-        user_id: zod_1.z.string({
-            required_error: 'user_id is required',
-        }),
-        shop_id: zod_1.z.string({
-            required_error: 'shop_id is required',
-        }),
     }),
 });
 const updatePaymentSchema = zod_1.z.object({

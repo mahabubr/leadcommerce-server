@@ -5,11 +5,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.OrdersRoutes = void 0;
 const express_1 = __importDefault(require("express"));
+const role_1 = require("../../../enum/role");
+const auth_1 = __importDefault(require("../../middleware/auth"));
 const validateRequest_1 = require("../../middleware/validateRequest");
 const order_controller_1 = require("./order.controller");
 const order_validation_1 = require("./order.validation");
 const router = express_1.default.Router();
-router.post('/', validateRequest_1.requestValidation.validateRequest(order_validation_1.OrderValidation.createOrderZodSchema), order_controller_1.OrdersController.createOrder);
+router.get('/orders-for-store', (0, auth_1.default)(role_1.ENUM_ROLE.STORE), order_controller_1.OrdersController.getAllOrdersForStore);
+router.get('/orders-for-deliveryman', (0, auth_1.default)(role_1.ENUM_ROLE.DELIVERY), order_controller_1.OrdersController.getAllOrdersForDeliveryMan);
+router.post('/', (0, auth_1.default)(role_1.ENUM_ROLE.EMPLOYEE), validateRequest_1.requestValidation.validateRequest(order_validation_1.OrderValidation.createOrderZodSchema), order_controller_1.OrdersController.createOrder);
 router.get('/', order_controller_1.OrdersController.getAllOrders);
 router.get('/:id', order_controller_1.OrdersController.getSingleOrder);
 router.put('/:id', validateRequest_1.requestValidation.validateRequest(order_validation_1.OrderValidation.updateOrderZodSchema), order_controller_1.OrdersController.updateOrder);

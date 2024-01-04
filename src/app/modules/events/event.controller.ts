@@ -7,10 +7,30 @@ import sendResponse from '../../../shared/sendResponse';
 import { EventFilterableField } from './event.constant';
 import { IEvent } from './event.interface';
 import { EventService } from './event.service';
+import cloudinary from '../../../config/cloudinary';
+import dayjs from 'dayjs';
 
 // *--[create event]--
 const createEvent = catAsync(async (req: Request, res: Response) => {
-  const { ...EventData } = req.body;
+
+  const EventData = JSON.parse(req.body.data);
+
+  if (req.file) {
+    const uploadedImage = await cloudinary.uploader.upload(req.file?.path);
+    console.log(uploadedImage);
+    const avatar = {
+      avatar: uploadedImage.secure_url,
+      avatar_public_url: uploadedImage.public_id,
+    };
+    EventData.image = avatar;
+  }
+
+  EventData.eventDate = dayjs(EventData.eventDate).format('YYYY-MMM-DD').toUpperCase();
+  EventData.startTime = dayjs(EventData.startTime).format('HH:mm');
+  EventData.endTime = dayjs(EventData.endTime).format('HH:mm');
+
+  console.log(EventData);
+
   const result = await EventService.createEvent(EventData);
   sendResponse<IEvent | null>(res, {
     statusCode: httpStatus.OK,

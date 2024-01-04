@@ -15,11 +15,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.DashboardUtils = void 0;
 const admin_model_1 = __importDefault(require("../admin/admin.model"));
 const category_model_1 = require("../category/category.model");
-const employees_model_1 = __importDefault(require("../employees/employees.model"));
 const order_model_1 = require("../order/order.model");
 const payment_model_1 = __importDefault(require("../payment/payment.model"));
 const products_model_1 = require("../products/products.model");
 const store_model_1 = __importDefault(require("../store/store.model"));
+const employe_model_1 = __importDefault(require("../employe/employe.model"));
 const getUserDailySingUp = () => __awaiter(void 0, void 0, void 0, function* () {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -47,7 +47,7 @@ const getUserDailySingUp = () => __awaiter(void 0, void 0, void 0, function* () 
     ];
     const store = yield store_model_1.default.aggregate(pipeline).exec();
     const admin = yield admin_model_1.default.aggregate(pipeline).exec();
-    const employees = yield employees_model_1.default.aggregate(pipeline).exec();
+    const employees = yield employe_model_1.default.aggregate(pipeline).exec();
     const userInfo = [...store, ...admin, ...employees];
     return userInfo.length;
 });
@@ -338,7 +338,7 @@ const getUserWeeklySignUp = () => __awaiter(void 0, void 0, void 0, function* ()
     ];
     const store = yield store_model_1.default.aggregate(pipeline).exec();
     const admin = yield admin_model_1.default.aggregate(pipeline).exec();
-    const employees = yield employees_model_1.default.aggregate(pipeline).exec();
+    const employees = yield employe_model_1.default.aggregate(pipeline).exec();
     const userCounts = [...store, ...admin, ...employees];
     const dateCursor = new Date(weekAgo);
     const endDate = new Date(today);
@@ -391,7 +391,7 @@ const getUserByCountry = () => __awaiter(void 0, void 0, void 0, function* () {
     ];
     const store = yield store_model_1.default.aggregate(pipeline).exec();
     const admin = yield admin_model_1.default.aggregate(pipeline).exec();
-    const employees = yield employees_model_1.default.aggregate(pipeline).exec();
+    const employees = yield employe_model_1.default.aggregate(pipeline).exec();
     const userCounts = [...store, ...admin, ...employees];
     return userCounts;
 });

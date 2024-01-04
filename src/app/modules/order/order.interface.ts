@@ -4,6 +4,7 @@ import { IProducts } from '../products/products.interface';
 export type IOrdersProductList = {
   product_id: Types.ObjectId | IProducts;
   product_quantity: number;
+  product_name: string;
   product_price: number;
 };
 
@@ -17,6 +18,7 @@ type shipment_address = {
 
 /* orders request for buyer */
 export type IOrdersReq = {
+  buyer_id?: string;
   order_id: string;
   user_Id: Types.ObjectId;
   order_product_list: IOrdersProductList[];
@@ -62,6 +64,7 @@ export type IOrders = {
   shipment_status?: 'pending' | 'completed' | 'canceled';
   shipment_address?: shipment_address;
   shipment_date?: string;
+  delivery_email?: string;
 };
 
 export type OrdersModel = Model<IOrders, Record<string, unknown>>;

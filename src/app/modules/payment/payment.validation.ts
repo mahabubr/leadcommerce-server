@@ -11,15 +11,6 @@ const createPaymentSchema = z.object({
     payment_status: z.string({
       required_error: 'payment_status is required',
     }),
-    payment_code: z.string({
-      required_error: 'payment_code is required',
-    }),
-    user_id: z.string({
-      required_error: 'user_id is required',
-    }),
-    shop_id: z.string({
-      required_error: 'shop_id is required',
-    }),
   }),
 });
 

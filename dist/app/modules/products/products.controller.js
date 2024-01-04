@@ -56,10 +56,12 @@ const createProduct = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
 }));
 // * get all product
 const getAllProducts = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const decoded = jsonwebtoken_1.default.decode(req.headers.authorization);
+    // const decoded = jwt.decode(req.headers.authorization as string) as JwtPayload;
     const filters = (0, pick_1.default)(req.query, products_constant_1.ProductFilterableFields);
     const paginationOptions = (0, pick_1.default)(req.query, paginationConstants_1.paginationFields);
-    const result = yield products_services_1.ProductsServices.getAllProducts(filters, paginationOptions, decoded.id);
+    const result = yield products_services_1.ProductsServices.getAllProducts(filters, paginationOptions
+    // decoded.id
+    );
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
@@ -122,6 +124,30 @@ const deleteProduct = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
         data: result,
     });
 }));
+// * get all product
+const getAllProductsForStore = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const decoded = jsonwebtoken_1.default.decode(req.headers.authorization);
+    const filters = (0, pick_1.default)(req.query, products_constant_1.ProductFilterableFields);
+    const paginationOptions = (0, pick_1.default)(req.query, paginationConstants_1.paginationFields);
+    const result = yield products_services_1.ProductsServices.getAllProductsForStore(filters, paginationOptions, decoded.id);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'Products retrieved successfully',
+        meta: result === null || result === void 0 ? void 0 : result.meta,
+        data: result === null || result === void 0 ? void 0 : result.data,
+    });
+}));
+const getSingleStoreProducts = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const id = req.params.id;
+    const result = yield products_services_1.ProductsServices.getSingleStoreProducts(id);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'Products retrieved successfully',
+        data: result,
+    });
+}));
 exports.ProductsController = {
     createProduct,
     getAllProducts,
@@ -129,4 +155,6 @@ exports.ProductsController = {
     getAllStoreProduct,
     deleteProduct,
     getSingleProduct,
+    getAllProductsForStore,
+    getSingleStoreProducts,
 };

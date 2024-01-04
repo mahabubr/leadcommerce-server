@@ -3,12 +3,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Event = void 0;
 const mongoose_1 = require("mongoose");
 const EventSchema = new mongoose_1.Schema({
+    image: {
+        avatar: { type: String },
+        avatar_public_url: { type: String },
+    },
     eventTitle: {
         type: String,
         required: true,
     },
     eventDate: {
-        type: Date,
+        type: String,
         required: true,
     },
     organizer: {
@@ -21,7 +25,7 @@ const EventSchema = new mongoose_1.Schema({
     },
     like: {
         type: Number,
-        required: true,
+        default: 0
     },
     startTime: {
         type: String,
@@ -47,19 +51,19 @@ const EventSchema = new mongoose_1.Schema({
         type: String,
         required: true,
     },
-    eventGust: [
-        {
-            image: { type: String, required: true },
-            name: { type: String, required: true },
-            designation: { type: String, required: true },
-            post: { type: String, required: true },
-        },
-    ],
-    eventTopic: [
-        {
-            title: { type: String, required: true },
-        },
-    ],
+    // eventGust: [
+    //   {
+    //     image: { type: String, required: true },
+    //     name: { type: String, required: true },
+    //     designation: { type: String, required: true },
+    //     post: { type: String, required: true },
+    //   },
+    // ],
+    // eventTopic: [
+    //   {
+    //     title: { type: String, required: true },
+    //   },
+    // ],
 }, {
     timestamps: true,
     toJSON: {

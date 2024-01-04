@@ -7,4 +7,5 @@ var ENUM_ROLE;
     ENUM_ROLE["ADMIN"] = "admin";
     ENUM_ROLE["STORE"] = "store";
     ENUM_ROLE["EMPLOYEE"] = "employee";
+    ENUM_ROLE["DELIVERY"] = "delivery";
 })(ENUM_ROLE || (exports.ENUM_ROLE = ENUM_ROLE = {}));

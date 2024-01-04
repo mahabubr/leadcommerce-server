@@ -31,8 +31,18 @@ const pick_1 = __importDefault(require("../../../shared/pick"));
 const sendResponse_1 = __importDefault(require("../../../shared/sendResponse"));
 const admin_constant_1 = require("./admin.constant");
 const admin_service_1 = require("./admin.service");
+const cloudinary_1 = __importDefault(require("../../../config/cloudinary"));
 const createAdmin = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     const AdminData = __rest(req.body, []);
+    if (req.file) {
+        const uploadedImage = yield cloudinary_1.default.uploader.upload((_a = req.file) === null || _a === void 0 ? void 0 : _a.path);
+        const avatar = {
+            avatar: uploadedImage.secure_url,
+            avatar_public_url: uploadedImage.public_id,
+        };
+        AdminData.image = avatar;
+    }
     const result = yield admin_service_1.AdminServices.createAdmin(AdminData);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,

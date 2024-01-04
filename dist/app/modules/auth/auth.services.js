@@ -19,14 +19,16 @@ const config_1 = __importDefault(require("../../../config"));
 const ApiError_1 = __importDefault(require("../../../errors/ApiError"));
 const jwtHelpers_1 = require("../../helpers/jwtHelpers");
 const admin_model_1 = __importDefault(require("../admin/admin.model"));
-const employees_model_1 = __importDefault(require("../employees/employees.model"));
+const delivery_model_1 = __importDefault(require("../delivery/delivery.model"));
 const store_model_1 = __importDefault(require("../store/store.model"));
+const employe_model_1 = __importDefault(require("../employe/employe.model"));
 const loginUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = payload;
     const admin = yield admin_model_1.default.findOne({ email: email });
-    const employee = yield employees_model_1.default.findOne({ email: email });
+    const employee = yield employe_model_1.default.findOne({ email: email });
     const store = yield store_model_1.default.findOne({ email: email });
-    if (!admin && !store && !employee) {
+    const delivery = yield delivery_model_1.default.findOne({ email: email });
+    if (!admin && !store && !employee && !delivery) {
         throw new ApiError_1.default(http_status_1.default.UNAUTHORIZED, 'User Not Found');
     }
     if (admin) {
@@ -55,6 +57,16 @@ const loginUser = (payload) => __awaiter(void 0, void 0, void 0, function* () {
             throw new ApiError_1.default(http_status_1.default.UNAUTHORIZED, 'Password not matched');
         }
         const accessToken = jwtHelpers_1.JwtHelper.createToken({ id: store._id, email: store.email, role: 'store' }, config_1.default.jwt.secret, '30d');
+        return {
+            accessToken,
+        };
+    }
+    if (delivery) {
+        const isPassMatched = yield bcrypt_1.default.compare(password, delivery.password);
+        if (!isPassMatched) {
+            throw new ApiError_1.default(http_status_1.default.UNAUTHORIZED, 'Password not matched');
+        }
+        const accessToken = jwtHelpers_1.JwtHelper.createToken({ id: delivery._id, email: delivery.email, role: 'delivery' }, config_1.default.jwt.secret, '30d');
         return {
             accessToken,
         };

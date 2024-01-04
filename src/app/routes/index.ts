@@ -4,13 +4,16 @@ import { AuthRoutes } from '../modules/auth/auth.routes';
 import { CategoryRoutes } from '../modules/category/category.route';
 import { DashboardRoutes } from '../modules/dashboard/dashboard.routes';
 
+import { DeliveryRoutes } from '../modules/delivery/delivery.routes';
+
 import { EventRoutes } from '../modules/events/event.routes';
+import { FaqRoutes } from '../modules/faq/faq.route';
 import { OrdersRoutes } from '../modules/order/order.routes';
 import { PaymentRoutes } from '../modules/payment/payment.route';
 import { ProductsRoutes } from '../modules/products/products.routes';
 import { ShipmentRoutes } from '../modules/shipment/shipment.route';
 import { StoreRoutes } from '../modules/store/store.routes';
-import { EmployeRoutes } from '../modules/employees/employees.routes';
+import { EmployeRoutes } from '../modules/employe/employe.routes';
 
 const router = express.Router();
 
@@ -58,6 +61,14 @@ const moduleRoutes = [
   {
     path: '/event',
     route: EventRoutes,
+  },
+  {
+    path: '/delivery',
+    route: DeliveryRoutes,
+  },
+  {
+    path: '/faq',
+    route: FaqRoutes,
   },
 ];
 

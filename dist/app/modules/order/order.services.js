@@ -33,8 +33,9 @@ const order_constant_1 = require("./order.constant");
 const order_model_1 = require("./order.model");
 const order_utils_1 = require("./order.utils");
 // * create Order
-const createOrder = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+const createOrder = (payload, id) => __awaiter(void 0, void 0, void 0, function* () {
     // console.log(payload);
+    payload.buyer_id = id;
     const { order_product_list, amount, shipment_address, shipment_date } = payload;
     /**
      ** [step-01] check same product product are listed in the db with id, price and quantity
@@ -58,7 +59,7 @@ const createOrder = (payload) => __awaiter(void 0, void 0, void 0, function* () 
         const isExistProduct = yield products_model_1.Products.findById(productId);
         if (!isExistProduct ||
             isExistProduct.price !== productPrice ||
-            isExistProduct.quantity < productQuantity) {
+            isExistProduct.quantity <= productQuantity) {
             throw new ApiError_1.default(http_status_1.default.NOT_FOUND, 'request product details is not matching! 🚀🚀🚀');
         }
     }
@@ -98,12 +99,9 @@ const createOrder = (payload) => __awaiter(void 0, void 0, void 0, function* () 
             }, { session });
         }
         // ** [create a order]/part-02
-        // TODO: buyer is fake
-        // TODO: user_id will be update from auth middleware data
         const result = yield order_model_1.Orders.create([
             {
-                buyer_id: '657ff528bcc34f2ba044d717',
-                user_id: '657ff528bcc34f2ba044d717',
+                buyer_id: payload.buyer_id,
                 order_code: order_code,
                 order_product_list: order_product_list,
                 total_items: order_product_list.length,
@@ -170,23 +168,7 @@ const getAllOrders = (filters, paginationOptions) => __awaiter(void 0, void 0, v
 });
 // * get single Orders
 const getSingleOrder = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield order_model_1.Orders.findById(id)
-        .populate({
-        path: 'user_id',
-        // select: 'from to distance',
-    })
-        .populate({
-        path: 'buyer_id',
-    })
-        .populate({
-        path: 'buyer_id',
-    })
-        .populate('payment_id')
-        .populate('shipment_id')
-        .populate({
-        path: 'order_product_list.product_id',
-        // select: '*',   // TODO: retrieved all products info/fields as the requirements
-    });
+    const result = yield order_model_1.Orders.findById(id);
     return result;
 });
 // * update single Product
@@ -205,10 +187,16 @@ const updateOrder = (id, payload) => __awaiter(void 0, void 0, void 0, function*
     return result;
 });
 const updateStatus = (payload) => __awaiter(void 0, void 0, void 0, function* () {
+    const data = {};
+    if (payload.data) {
+        data.order_status = payload.data;
+    }
+    if (payload.delivery_email) {
+        data.delivery_email = payload.delivery_email;
+    }
+    console.log(data, payload.id, 'update status');
     const result = yield order_model_1.Orders.updateOne({ _id: payload.id }, {
-        $set: {
-            order_status: payload.data,
-        },
+        $set: Object.assign({}, data),
     });
     return result;
 });
@@ -221,6 +209,132 @@ const deleteOrder = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield order_model_1.Orders.findByIdAndDelete(id);
     return result;
 });
+const getAllOrdersForStore = (filters, paginationOptions) => __awaiter(void 0, void 0, void 0, function* () {
+    const { searchTerm } = filters, filtersData = __rest(filters, ["searchTerm"]);
+    const { page, limit, skip, sortBy, sortOrder } = paginationHelper_1.paginationHelpers.calculatePagination(paginationOptions);
+    const andCondition = [];
+    if (searchTerm) {
+        andCondition.push({
+            $or: order_constant_1.OrderSearchableFields.map(field => ({
+                [field]: {
+                    $regex: searchTerm,
+                    $options: 'i',
+                },
+            })),
+        });
+    }
+    if (Object.keys(filtersData).length) {
+        andCondition.push({
+            $and: Object.entries(filtersData).map(([field, value]) => ({
+                [field]: value,
+            })),
+        });
+    }
+    const sortCondition = {};
+    if (sortBy && sortOrder) {
+        sortCondition[sortBy] = sortOrder;
+    }
+    const whereCondition = andCondition.length > 0 ? { $and: andCondition } : {};
+    const result = yield order_model_1.Orders.find(whereCondition)
+        .sort(sortCondition)
+        .skip(skip)
+        .limit(limit);
+    const total = yield order_model_1.Orders.countDocuments(whereCondition);
+    return {
+        meta: {
+            page,
+            limit,
+            total,
+        },
+        data: result,
+    };
+});
+// const getAllOrdersForStore = async (
+//   filters: Partial<IOrdersFilters>,
+//   paginationOptions: IPaginationOptions,
+//   store_id: string
+// ): Promise<IOrders[]> => {
+//   console.log(store_id);
+//   const pipeline = [
+//     {
+//       $unwind: '$order_product_list', // Unwind the order_product_list array
+//     },
+//     {
+//       $lookup: {
+//         from: 'products', // Product Schema for joining
+//         let: {
+//           productId: '$order_product_list.product_id',
+//           store_id: store_id,
+//         },
+//         pipeline: [
+//           {
+//             $match: {
+//               $expr: {
+//                 $and: [
+//                   { $eq: ['$_id', '$$productId'] }, // Match product_id
+//                   { $eq: ['$store_id', '$$store_id'] }, // Match store_id
+//                 ],
+//               },
+//             },
+//           },
+//         ],
+//         as: 'product_details',
+//       },
+//     },
+//   ];
+//   const storeOrders = await Orders.aggregate(
+//     pipeline as PipelineStage[]
+//   ).exec();
+//   return storeOrders;
+// };
+const getAllOrdersForDeliveryMan = (filters, paginationOptions, delivery_email) => __awaiter(void 0, void 0, void 0, function* () {
+    const { searchTerm } = filters, filtersData = __rest(filters, ["searchTerm"]);
+    const { page, limit, skip, sortBy, sortOrder } = paginationHelper_1.paginationHelpers.calculatePagination(paginationOptions);
+    console.log(delivery_email);
+    const andCondition = [];
+    if (searchTerm) {
+        andCondition.push({
+            $or: order_constant_1.OrderSearchableFields.map(field => ({
+                [field]: {
+                    $regex: searchTerm,
+                    $options: 'i',
+                },
+            })),
+        });
+    }
+    if (delivery_email) {
+        andCondition.push({
+            delivery_email: {
+                $eq: delivery_email,
+            },
+        });
+    }
+    if (Object.keys(filtersData).length) {
+        andCondition.push({
+            $and: Object.entries(filtersData).map(([field, value]) => ({
+                [field]: value,
+            })),
+        });
+    }
+    const sortCondition = {};
+    if (sortBy && sortOrder) {
+        sortCondition[sortBy] = sortOrder;
+    }
+    const whereCondition = andCondition.length > 0 ? { $and: andCondition } : {};
+    const result = yield order_model_1.Orders.find(whereCondition)
+        .sort(sortCondition)
+        .skip(skip)
+        .limit(limit);
+    const total = yield order_model_1.Orders.countDocuments(whereCondition);
+    return {
+        meta: {
+            page,
+            limit,
+            total,
+        },
+        data: result,
+    };
+});
 exports.OrdersServices = {
     createOrder,
     getAllOrders,
@@ -228,4 +342,6 @@ exports.OrdersServices = {
     updateOrder,
     deleteOrder,
     updateStatus,
+    getAllOrdersForStore,
+    getAllOrdersForDeliveryMan,
 };

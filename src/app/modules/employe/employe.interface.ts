@@ -9,6 +9,7 @@ export type IEmploye = {
   phone: string;
   password: string;
   country: string;
+  income: number;
 };
 
 export type EmployeModel = Model<IEmploye, Record<string, unknown>>;

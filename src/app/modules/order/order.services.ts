@@ -11,8 +11,12 @@ import { Orders } from './order.model';
 import { generatedOrderCode } from './order.utils';
 
 // * create Order
-const createOrder = async (payload: IOrdersReq): Promise<IOrders | null> => {
+const createOrder = async (
+  payload: IOrdersReq,
+  id: string
+): Promise<IOrders | null> => {
   // console.log(payload);
+  payload.buyer_id = id;
   const { order_product_list, amount, shipment_address, shipment_date } =
     payload;
 
@@ -47,7 +51,7 @@ const createOrder = async (payload: IOrdersReq): Promise<IOrders | null> => {
     if (
       !isExistProduct ||
       isExistProduct.price !== productPrice ||
-      isExistProduct.quantity < productQuantity
+      isExistProduct.quantity <= productQuantity
     ) {
       throw new ApiError(
         httpStatus.NOT_FOUND,
@@ -110,13 +114,10 @@ const createOrder = async (payload: IOrdersReq): Promise<IOrders | null> => {
     }
 
     // ** [create a order]/part-02
-    // TODO: buyer is fake
-    // TODO: user_id will be update from auth middleware data
     const result = await Orders.create(
       [
         {
-          buyer_id: '657ff528bcc34f2ba044d717',
-          user_id: '657ff528bcc34f2ba044d717',
+          buyer_id: payload.buyer_id,
           order_code: order_code,
           order_product_list: order_product_list,
           total_items: order_product_list.length,
@@ -201,23 +202,7 @@ const getAllOrders = async (
 
 // * get single Orders
 const getSingleOrder = async (id: string): Promise<IOrders | null> => {
-  const result = await Orders.findById(id)
-    .populate({
-      path: 'user_id',
-      // select: 'from to distance',
-    })
-    .populate({
-      path: 'buyer_id',
-    })
-    .populate({
-      path: 'buyer_id',
-    })
-    .populate('payment_id')
-    .populate('shipment_id')
-    .populate({
-      path: 'order_product_list.product_id',
-      // select: '*',   // TODO: retrieved all products info/fields as the requirements
-    });
+  const result = await Orders.findById(id);
   return result;
 };
 
@@ -247,12 +232,24 @@ const updateOrder = async (
   return result;
 };
 
-const updateStatus = async (payload: { data: string; id: string }) => {
+const updateStatus = async (payload: {
+  data: string;
+  id: string;
+  delivery_email: string;
+}) => {
+  const data: any = {};
+  if (payload.data) {
+    data.order_status = payload.data;
+  }
+  if (payload.delivery_email) {
+    data.delivery_email = payload.delivery_email;
+  }
+  console.log(data, payload.id, 'update status');
   const result = await Orders.updateOne(
     { _id: payload.id },
     {
       $set: {
-        order_status: payload.data,
+        ...data,
       },
     }
   );
@@ -272,6 +269,164 @@ const deleteOrder = async (id: string): Promise<IOrders | null> => {
   return result;
 };
 
+const getAllOrdersForStore = async (
+  filters: Partial<IOrdersFilters>,
+  paginationOptions: IPaginationOptions,
+): Promise<IGenericResponse<IOrders[]>> => {
+  const { searchTerm, ...filtersData } = filters;
+  const { page, limit, skip, sortBy, sortOrder } =
+    paginationHelpers.calculatePagination(paginationOptions);
+
+  const andCondition = [];
+  if (searchTerm) {
+    andCondition.push({
+      $or: OrderSearchableFields.map(field => ({
+        [field]: {
+          $regex: searchTerm,
+          $options: 'i',
+        },
+      })),
+    });
+  }
+
+  if (Object.keys(filtersData).length) {
+    andCondition.push({
+      $and: Object.entries(filtersData).map(([field, value]) => ({
+        [field]: value,
+      })),
+    });
+  }
+
+  const sortCondition: { [key: string]: SortOrder } = {};
+
+  if (sortBy && sortOrder) {
+    sortCondition[sortBy] = sortOrder;
+  }
+
+  const whereCondition = andCondition.length > 0 ? { $and: andCondition } : {};
+
+  const result = await Orders.find(whereCondition)
+    .sort(sortCondition)
+    .skip(skip)
+    .limit(limit);
+
+  const total = await Orders.countDocuments(whereCondition);
+
+  return {
+    meta: {
+      page,
+      limit,
+      total,
+    },
+    data: result,
+  };
+};
+
+// const getAllOrdersForStore = async (
+//   filters: Partial<IOrdersFilters>,
+//   paginationOptions: IPaginationOptions,
+//   store_id: string
+// ): Promise<IOrders[]> => {
+//   console.log(store_id);
+
+//   const pipeline = [
+//     {
+//       $unwind: '$order_product_list', // Unwind the order_product_list array
+//     },
+//     {
+//       $lookup: {
+//         from: 'products', // Product Schema for joining
+//         let: {
+//           productId: '$order_product_list.product_id',
+//           store_id: store_id,
+//         },
+//         pipeline: [
+//           {
+//             $match: {
+//               $expr: {
+//                 $and: [
+//                   { $eq: ['$_id', '$$productId'] }, // Match product_id
+//                   { $eq: ['$store_id', '$$store_id'] }, // Match store_id
+//                 ],
+//               },
+//             },
+//           },
+//         ],
+//         as: 'product_details',
+//       },
+//     },
+//   ];
+
+//   const storeOrders = await Orders.aggregate(
+//     pipeline as PipelineStage[]
+//   ).exec();
+
+//   return storeOrders;
+// };
+const getAllOrdersForDeliveryMan = async (
+  filters: Partial<IOrdersFilters>,
+  paginationOptions: IPaginationOptions,
+  delivery_email: string
+): Promise<IGenericResponse<IOrders[]>> => {
+  const { searchTerm, ...filtersData } = filters;
+  const { page, limit, skip, sortBy, sortOrder } =
+    paginationHelpers.calculatePagination(paginationOptions);
+
+  console.log(delivery_email);
+
+  const andCondition = [];
+  if (searchTerm) {
+    andCondition.push({
+      $or: OrderSearchableFields.map(field => ({
+        [field]: {
+          $regex: searchTerm,
+          $options: 'i',
+        },
+      })),
+    });
+  }
+
+  if (delivery_email) {
+    andCondition.push({
+      delivery_email: {
+        $eq: delivery_email,
+      },
+    });
+  }
+
+  if (Object.keys(filtersData).length) {
+    andCondition.push({
+      $and: Object.entries(filtersData).map(([field, value]) => ({
+        [field]: value,
+      })),
+    });
+  }
+
+  const sortCondition: { [key: string]: SortOrder } = {};
+
+  if (sortBy && sortOrder) {
+    sortCondition[sortBy] = sortOrder;
+  }
+
+  const whereCondition = andCondition.length > 0 ? { $and: andCondition } : {};
+
+  const result = await Orders.find(whereCondition)
+    .sort(sortCondition)
+    .skip(skip)
+    .limit(limit);
+
+  const total = await Orders.countDocuments(whereCondition);
+
+  return {
+    meta: {
+      page,
+      limit,
+      total,
+    },
+    data: result,
+  };
+};
+
 export const OrdersServices = {
   createOrder,
   getAllOrders,
@@ -279,4 +434,6 @@ export const OrdersServices = {
   updateOrder,
   deleteOrder,
   updateStatus,
+  getAllOrdersForStore,
+  getAllOrdersForDeliveryMan,
 };

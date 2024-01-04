@@ -56,7 +56,7 @@ const ProductsSchema = new mongoose_1.Schema({
     },
     store_id: {
         type: mongoose_1.Schema.Types.ObjectId,
-        // ref: 'Payments',  // TODO: change to the Payments table schema
+        ref: 'Store', // TODO: change to the Payments table schema
     },
 }, {
     timestamps: true,

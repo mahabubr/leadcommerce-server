@@ -23,75 +23,82 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.EmployeController = void 0;
+exports.DeliveryController = void 0;
 const http_status_1 = __importDefault(require("http-status"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const paginationConstants_1 = require("../../../constants/paginationConstants");
 const catchAsync_1 = __importDefault(require("../../../shared/catchAsync"));
 const pick_1 = __importDefault(require("../../../shared/pick"));
 const sendResponse_1 = __importDefault(require("../../../shared/sendResponse"));
-const employees_interfaces_1 = require("./employees.interfaces");
-const employees_services_1 = require("./employees.services");
-const createEmploye = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const EmployeData = __rest(req.body, []);
-    const result = yield employees_services_1.EmployeServices.createEmploye(EmployeData);
+const delivery_interface_1 = require("./delivery.interface");
+const delivery_services_1 = require("./delivery.services");
+const cloudinary_1 = __importDefault(require("../../../config/cloudinary"));
+const createDelivery = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    const DeliveryData = __rest(req.body, []);
+    if (req.file) {
+        const uploadedImage = yield cloudinary_1.default.uploader.upload((_a = req.file) === null || _a === void 0 ? void 0 : _a.path);
+        const avatar = {
+            avatar: uploadedImage.secure_url,
+            avatar_public_url: uploadedImage.public_id,
+        };
+        DeliveryData.image = avatar;
+    }
+    const result = yield delivery_services_1.DeliveryServices.createDelivery(DeliveryData);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
-        message: 'Employes created successfully',
+        message: 'Delivery created successfully',
         data: result,
     });
 }));
-// get multiple data from database
-const getAllEmploye = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const filters = (0, pick_1.default)(req.query, employees_interfaces_1.EmployeFilterableFields);
+const getAllDelivery = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const filters = (0, pick_1.default)(req.query, delivery_interface_1.DeliveryFilterableFields);
     const paginationOptions = (0, pick_1.default)(req.query, paginationConstants_1.paginationFields);
-    const result = yield employees_services_1.EmployeServices.getAllEmploye(filters, paginationOptions);
+    const result = yield delivery_services_1.DeliveryServices.getAllDelivery(filters, paginationOptions);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
-        message: 'Employes retrived successfully',
+        message: 'Delivery retrieved successfully',
         meta: result === null || result === void 0 ? void 0 : result.meta,
         data: result === null || result === void 0 ? void 0 : result.data,
     });
 }));
-const getSingleEmploye = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const getSingleDelivery = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const decoded = jsonwebtoken_1.default.decode(req.headers.authorization);
-    const result = yield employees_services_1.EmployeServices.getSingleEmploye(decoded.id);
+    const result = yield delivery_services_1.DeliveryServices.getSingleDelivery(decoded.id);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
-        message: 'Employe Fetched successfully',
+        message: 'Delivery Fetched successfully',
         data: result,
     });
 }));
-// * update Employe
-const updateEmploye = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const updateDelivery = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const decoded = jsonwebtoken_1.default.decode(req.headers.authorization);
     const updatedData = req.body;
-    const result = yield employees_services_1.EmployeServices.updateEmploye(decoded.id, updatedData);
+    const result = yield delivery_services_1.DeliveryServices.updateDelivery(decoded.id, updatedData);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
-        message: 'Employe updated successfully',
+        message: 'Delivery updated successfully',
         data: result,
     });
 }));
-// * delete single Employe
-const deleteEmploye = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const deleteDelivery = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-    const result = yield employees_services_1.EmployeServices.deleteEmploye(id);
+    const result = yield delivery_services_1.DeliveryServices.deleteDelivery(id);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
-        message: 'Employe deleted successfully',
+        message: 'Delivery deleted successfully',
         data: result,
     });
 }));
-exports.EmployeController = {
-    createEmploye,
-    getAllEmploye,
-    getSingleEmploye,
-    updateEmploye,
-    deleteEmploye,
+exports.DeliveryController = {
+    deleteDelivery,
+    createDelivery,
+    updateDelivery,
+    getAllDelivery,
+    getSingleDelivery,
 };

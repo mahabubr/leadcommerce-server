@@ -3,4 +3,5 @@ export enum ENUM_ROLE {
   ADMIN = 'admin',
   STORE = 'store',
   EMPLOYEE = 'employee',
+  DELIVERY = 'delivery',
 }
