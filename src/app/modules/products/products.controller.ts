@@ -139,6 +139,19 @@ const getAllProductsForStore = catAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getSingleStoreProducts = catAsync(async (req: Request, res: Response) => {
+  const id = req.params.id;
+
+  const result = await ProductsServices.getSingleStoreProducts(id);
+
+  sendResponse<IProducts[]>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Products retrieved successfully',
+    data: result,
+  });
+});
+
 export const ProductsController = {
   createProduct,
   getAllProducts,
@@ -147,4 +160,5 @@ export const ProductsController = {
   deleteProduct,
   getSingleProduct,
   getAllProductsForStore,
+  getSingleStoreProducts,
 };

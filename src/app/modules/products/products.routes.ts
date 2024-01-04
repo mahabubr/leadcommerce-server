@@ -6,7 +6,12 @@ import { ProductsController } from './products.controller';
 
 const router = express.Router();
 
-router.get('/store', auth(ENUM_ROLE.STORE), ProductsController.getAllProductsForStore);
+router.get(
+  '/store',
+  auth(ENUM_ROLE.STORE),
+  ProductsController.getAllProductsForStore
+);
+router.get('/single-store/:id', ProductsController.getSingleStoreProducts);
 
 router.post(
   '/',

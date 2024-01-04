@@ -127,8 +127,6 @@ const getAllProductsForStore = async (
   const { page, limit, skip, sortBy, sortOrder } =
     paginationHelpers.calculatePagination(paginationOptions);
 
-  console.log(store_id);
-
   const andCondition = [];
 
   if (searchTerm) {
@@ -185,6 +183,12 @@ const getAllProductsForStore = async (
   };
 };
 
+const getSingleStoreProducts = async (id: string) => {
+  return await Products.find({
+    store_id: id,
+  }).limit(3);
+};
+
 export const ProductsServices = {
   createProduct,
   updateProduct,
@@ -193,4 +197,5 @@ export const ProductsServices = {
   getAllStoreProduct,
   getAllProducts,
   getAllProductsForStore,
+  getSingleStoreProducts,
 };
