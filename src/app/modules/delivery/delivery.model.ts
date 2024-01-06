@@ -13,6 +13,7 @@ const DeliverySchema = new Schema<IDelivery>(
     phone: { type: String, required: true },
     password: { type: String, required: true },
     address: { type: String, default: null },
+    country: { type: String, default: 'United States' },
   },
   {
     timestamps: true,

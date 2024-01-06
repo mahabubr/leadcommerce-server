@@ -119,11 +119,7 @@ const updateAdmin = async (
     throw new ApiError(httpStatus.NOT_FOUND, 'Admin is not found');
   }
 
-  // if (payload.email) {
-  //   const isExist = await Admin.find({ email: payload.email });
-  //   if (isExist)
-  //     throw new ApiError(httpStatus.CONFLICT, 'Email is already in used');
-  // }
+
 
   const result = await Admin.findOneAndUpdate({ _id: id }, payload, {
     new: true,
