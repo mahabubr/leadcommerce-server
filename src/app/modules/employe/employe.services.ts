@@ -124,11 +124,11 @@ const updateEmploye = async (
     throw new ApiError(httpStatus.NOT_FOUND, 'Employe is not found');
   }
 
-  if (payload.email) {
-    const isExist = await Employe.find({ email: payload.email });
-    if (isExist)
-      throw new ApiError(httpStatus.CONFLICT, 'Email is already in used');
-  }
+  // if (payload.email) {
+  //   const isExist = await Employe.find({ email: payload.email });
+  //   if (isExist)
+  //     throw new ApiError(httpStatus.CONFLICT, 'Email is already in used');
+  // }
 
   const result = await Employe.findOneAndUpdate({ _id: id }, payload, {
     new: true,
@@ -138,7 +138,9 @@ const updateEmploye = async (
 };
 
 // * delete single product
-const deleteEmploye = async (id: string): Promise<IEmploye | null> => {
+const deleteEmploye = async (
+  id: string
+) => {
   const isExist = await Employe.findById(id);
 
   if (!isExist) {
