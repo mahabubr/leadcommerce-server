@@ -12,8 +12,10 @@ router.post(
   requestValidation.validateRequest(AdminValidation.createAdminSchema),
   AdminController.createAdmin
 );
+// get single data from single Employe
+router.get('/single', AdminController.getSingleAdminWithtoken);
 // update Admin
-router.patch('/:id', AdminController.updateAdmin);
+router.put('/update', multer.single('image'), AdminController.updateAdmin);
 // get single data from single Admin
 router.get('/:id', AdminController.getSingleAdmin);
 // delete Admin
