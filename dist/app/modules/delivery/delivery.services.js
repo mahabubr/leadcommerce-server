@@ -117,11 +117,11 @@ const updateDelivery = (id, payload) => __awaiter(void 0, void 0, void 0, functi
     if (!isExist) {
         throw new ApiError_1.default(http_status_1.default.NOT_FOUND, 'Delivery is not found');
     }
-    if (payload.email) {
-        const isExist = yield delivery_model_1.default.find({ email: payload.email });
-        if (isExist)
-            throw new ApiError_1.default(http_status_1.default.CONFLICT, 'Email is already in used');
-    }
+    // if (payload.email) {
+    //   const isExist = await Delivery.find({ email: payload.email });
+    //   if (isExist)
+    //     throw new ApiError(httpStatus.CONFLICT, 'Email is already in used');
+    // }
     const result = yield delivery_model_1.default.findOneAndUpdate({ _id: id }, payload, {
         new: true,
     });

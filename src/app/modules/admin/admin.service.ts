@@ -119,8 +119,6 @@ const updateAdmin = async (
     throw new ApiError(httpStatus.NOT_FOUND, 'Admin is not found');
   }
 
-
-
   const result = await Admin.findOneAndUpdate({ _id: id }, payload, {
     new: true,
   });

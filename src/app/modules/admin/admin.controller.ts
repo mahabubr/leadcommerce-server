@@ -36,6 +36,7 @@ const getSingleAdminWithtoken = catAsync(
     const decoded = jwt.decode(
       req.headers.authorization as string
     ) as JwtPayload;
+
     const result = await AdminServices.getSingleAdmin(decoded.id);
 
     sendResponse<IAdmin | null>(res, {

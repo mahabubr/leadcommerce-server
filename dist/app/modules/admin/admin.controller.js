@@ -25,13 +25,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AdminController = void 0;
 const http_status_1 = __importDefault(require("http-status"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const cloudinary_1 = __importDefault(require("../../../config/cloudinary"));
 const paginationConstants_1 = require("../../../constants/paginationConstants");
 const catchAsync_1 = __importDefault(require("../../../shared/catchAsync"));
 const pick_1 = __importDefault(require("../../../shared/pick"));
 const sendResponse_1 = __importDefault(require("../../../shared/sendResponse"));
 const admin_constant_1 = require("./admin.constant");
 const admin_service_1 = require("./admin.service");
-const cloudinary_1 = __importDefault(require("../../../config/cloudinary"));
 const createAdmin = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     const AdminData = __rest(req.body, []);
@@ -48,6 +49,16 @@ const createAdmin = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, vo
         statusCode: http_status_1.default.OK,
         success: true,
         message: 'Admins created successfully',
+        data: result,
+    });
+}));
+const getSingleAdminWithtoken = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const decoded = jsonwebtoken_1.default.decode(req.headers.authorization);
+    const result = yield admin_service_1.AdminServices.getSingleAdmin(decoded.id);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_1.default.OK,
+        success: true,
+        message: 'Admin Fetched successfully',
         data: result,
     });
 }));
@@ -76,9 +87,18 @@ const getSingleAdmin = (0, catchAsync_1.default)((req, res) => __awaiter(void 0,
 }));
 // * update Admin
 const updateAdmin = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { id } = req.params;
-    const updatedData = req.body;
-    const result = yield admin_service_1.AdminServices.updateAdmin(id, updatedData);
+    var _b;
+    const decoded = jsonwebtoken_1.default.decode(req.headers.authorization);
+    const updatedData = __rest(req.body, []);
+    if (req.file) {
+        const uploadedImage = yield cloudinary_1.default.uploader.upload((_b = req.file) === null || _b === void 0 ? void 0 : _b.path);
+        const avatar = {
+            avatar: uploadedImage.secure_url,
+            avatar_public_url: uploadedImage.public_id,
+        };
+        updatedData.image = avatar;
+    }
+    const result = yield admin_service_1.AdminServices.updateAdmin(decoded.id, updatedData);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
@@ -101,6 +121,7 @@ exports.AdminController = {
     createAdmin,
     getAllAdmin,
     getSingleAdmin,
+    getSingleAdminWithtoken,
     updateAdmin,
     deleteAdmin,
 };

@@ -12,6 +12,7 @@ const DeliverySchema = new mongoose_1.Schema({
     phone: { type: String, required: true },
     password: { type: String, required: true },
     address: { type: String, default: null },
+    country: { type: String, default: 'United States' },
 }, {
     timestamps: true,
     toJSON: {

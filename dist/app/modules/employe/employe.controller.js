@@ -31,8 +31,8 @@ const paginationConstants_1 = require("../../../constants/paginationConstants");
 const catchAsync_1 = __importDefault(require("../../../shared/catchAsync"));
 const pick_1 = __importDefault(require("../../../shared/pick"));
 const sendResponse_1 = __importDefault(require("../../../shared/sendResponse"));
-const employe_services_1 = require("./employe.services");
 const employe_interface_1 = require("./employe.interface");
+const employe_services_1 = require("./employe.services");
 const createEmploye = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     const EmployeData = __rest(req.body, []);
@@ -77,8 +77,17 @@ const getSingleEmploye = (0, catchAsync_1.default)((req, res) => __awaiter(void 
 }));
 // * update Employe
 const updateEmploye = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _b;
     const decoded = jsonwebtoken_1.default.decode(req.headers.authorization);
-    const updatedData = req.body;
+    const updatedData = __rest(req.body, []);
+    if (req.file) {
+        const uploadedImage = yield cloudinary_1.default.uploader.upload((_b = req.file) === null || _b === void 0 ? void 0 : _b.path);
+        const avatar = {
+            avatar: uploadedImage.secure_url,
+            avatar_public_url: uploadedImage.public_id,
+        };
+        updatedData.image = avatar;
+    }
     const result = yield employe_services_1.EmployeServices.updateEmploye(decoded.id, updatedData);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,

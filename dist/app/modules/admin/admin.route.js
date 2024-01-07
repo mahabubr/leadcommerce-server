@@ -11,8 +11,10 @@ const admin_controller_1 = require("./admin.controller");
 const admin_validation_1 = require("./admin.validation");
 const router = express_1.default.Router();
 router.post('/create-admin', multer_1.default.single('image'), validateRequest_1.requestValidation.validateRequest(admin_validation_1.AdminValidation.createAdminSchema), admin_controller_1.AdminController.createAdmin);
+// get single data from single Employe
+router.get('/single', admin_controller_1.AdminController.getSingleAdminWithtoken);
 // update Admin
-router.patch('/:id', admin_controller_1.AdminController.updateAdmin);
+router.put('/update', multer_1.default.single('image'), admin_controller_1.AdminController.updateAdmin);
 // get single data from single Admin
 router.get('/:id', admin_controller_1.AdminController.getSingleAdmin);
 // delete Admin
