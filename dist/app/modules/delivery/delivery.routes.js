@@ -9,7 +9,7 @@ const delivery_controller_1 = require("./delivery.controller");
 const multer_1 = __importDefault(require("../../middleware/multer"));
 const router = express_1.default.Router();
 router.post('/create-delivery', multer_1.default.single('image'), delivery_controller_1.DeliveryController.createDelivery);
-router.patch('/update', delivery_controller_1.DeliveryController.updateDelivery);
+router.put('/update', multer_1.default.single('image'), delivery_controller_1.DeliveryController.updateDelivery);
 router.get('/single', delivery_controller_1.DeliveryController.getSingleDelivery);
 router.delete('/:id', delivery_controller_1.DeliveryController.deleteDelivery);
 router.get('/', delivery_controller_1.DeliveryController.getAllDelivery);

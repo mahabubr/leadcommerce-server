@@ -6,8 +6,8 @@ import { paginationFields } from '../../../constants/paginationConstants';
 import catAsync from '../../../shared/catchAsync';
 import pick from '../../../shared/pick';
 import sendResponse from '../../../shared/sendResponse';
-import { EmployeServices } from './employe.services';
 import { EmployeFilterableFields, IEmploye } from './employe.interface';
+import { EmployeServices } from './employe.services';
 
 const createEmploye = catAsync(async (req: Request, res: Response) => {
   const { ...EmployeData } = req.body;
@@ -64,8 +64,17 @@ const getSingleEmploye = catAsync(async (req: Request, res: Response) => {
 
 const updateEmploye = catAsync(async (req: Request, res: Response) => {
   const decoded = jwt.decode(req.headers.authorization as string) as JwtPayload;
+  const { ...updatedData } = req.body;
 
-  const updatedData = req.body;
+  if (req.file) {
+    const uploadedImage = await cloudinary.uploader.upload(req.file?.path);
+    const avatar = {
+      avatar: uploadedImage.secure_url,
+      avatar_public_url: uploadedImage.public_id,
+    };
+    updatedData.image = avatar;
+  }
+
   const result = await EmployeServices.updateEmploye(decoded.id, updatedData);
 
   sendResponse<IEmploye | null>(res, {
@@ -81,7 +90,7 @@ const deleteEmploye = catAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
   const result = await EmployeServices.deleteEmploye(id);
 
-  sendResponse<IEmploye | null>(res, {
+  sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: 'Employe deleted successfully',

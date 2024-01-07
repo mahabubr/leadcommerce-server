@@ -10,7 +10,11 @@ router.post(
   DeliveryController.createDelivery
 );
 
-router.patch('/update', DeliveryController.updateDelivery);
+router.put(
+  '/update',
+  multer.single('image'),
+  DeliveryController.updateDelivery
+);
 
 router.get('/single', DeliveryController.getSingleDelivery);
 

@@ -12,7 +12,7 @@ const employe_validation_1 = require("./employe.validation");
 const router = express_1.default.Router();
 router.post('/create-employe', multer_1.default.single('image'), validateRequest_1.requestValidation.validateRequest(employe_validation_1.EmployeValidation.createEmployeSchema), employe_controller_1.EmployeController.createEmploye);
 // update Employe
-router.patch('/update', employe_controller_1.EmployeController.updateEmploye);
+router.put('/update', multer_1.default.single('image'), employe_controller_1.EmployeController.updateEmploye);
 // get single data from single Employe
 router.get('/single', employe_controller_1.EmployeController.getSingleEmploye);
 // delete Employe

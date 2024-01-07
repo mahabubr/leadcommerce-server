@@ -126,11 +126,11 @@ const updateDelivery = async (
     throw new ApiError(httpStatus.NOT_FOUND, 'Delivery is not found');
   }
 
-  if (payload.email) {
-    const isExist = await Delivery.find({ email: payload.email });
-    if (isExist)
-      throw new ApiError(httpStatus.CONFLICT, 'Email is already in used');
-  }
+  // if (payload.email) {
+  //   const isExist = await Delivery.find({ email: payload.email });
+  //   if (isExist)
+  //     throw new ApiError(httpStatus.CONFLICT, 'Email is already in used');
+  // }
 
   const result = await Delivery.findOneAndUpdate({ _id: id }, payload, {
     new: true,
@@ -139,7 +139,7 @@ const updateDelivery = async (
   return result;
 };
 
-const deleteDelivery = async (id: string): Promise<IDelivery | null> => {
+const deleteDelivery = async (id: string) => {
   const isExist = await Delivery.findById(id);
 
   if (!isExist) {

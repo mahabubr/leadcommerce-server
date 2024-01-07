@@ -5,11 +5,11 @@ import ApiError from '../../../errors/ApiError';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IGenericResponse } from '../../../interfaces/common';
 import { IPaginationOptions } from '../../../interfaces/pagination';
+import Employe from '../employe/employe.model';
 import Store from '../store/store.model';
 import { AdminSearchableFields } from './admin.constant';
 import { IAdmin, IAdminFilters } from './admin.interface';
 import Admin from './admin.model';
-import Employe from '../employe/employe.model';
 
 const createAdmin = async (payload: IAdmin): Promise<IAdmin> => {
   const admin = await Admin.findOne({ email: payload.email });
@@ -119,12 +119,6 @@ const updateAdmin = async (
     throw new ApiError(httpStatus.NOT_FOUND, 'Admin is not found');
   }
 
-  if (payload.email) {
-    const isExist = await Admin.find({ email: payload.email });
-    if (isExist)
-      throw new ApiError(httpStatus.CONFLICT, 'Email is already in used');
-  }
-
   const result = await Admin.findOneAndUpdate({ _id: id }, payload, {
     new: true,
   });
@@ -133,7 +127,7 @@ const updateAdmin = async (
 };
 
 // * delete single product
-const deleteAdmin = async (id: string): Promise<IAdmin | null> => {
+const deleteAdmin = async (id: string) => {
   const isExist = await Admin.findById(id);
 
   if (!isExist) {

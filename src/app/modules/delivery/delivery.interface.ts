@@ -8,6 +8,7 @@ export type IDelivery = {
   phone: string;
   password: string;
   address: string;
+  country: string;
 };
 
 export type DeliveryModel = Model<IDelivery, Record<string, unknown>>;

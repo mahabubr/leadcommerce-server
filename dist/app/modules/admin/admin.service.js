@@ -28,10 +28,10 @@ const bcrypt_1 = __importDefault(require("bcrypt"));
 const http_status_1 = __importDefault(require("http-status"));
 const ApiError_1 = __importDefault(require("../../../errors/ApiError"));
 const paginationHelper_1 = require("../../../helpers/paginationHelper");
+const employe_model_1 = __importDefault(require("../employe/employe.model"));
 const store_model_1 = __importDefault(require("../store/store.model"));
 const admin_constant_1 = require("./admin.constant");
 const admin_model_1 = __importDefault(require("./admin.model"));
-const employe_model_1 = __importDefault(require("../employe/employe.model"));
 const createAdmin = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const admin = yield admin_model_1.default.findOne({ email: payload.email });
     const employee = yield employe_model_1.default.findOne({ email: payload.email });
@@ -113,11 +113,6 @@ const updateAdmin = (id, payload) => __awaiter(void 0, void 0, void 0, function*
     const isExist = yield admin_model_1.default.findById(id);
     if (!isExist) {
         throw new ApiError_1.default(http_status_1.default.NOT_FOUND, 'Admin is not found');
-    }
-    if (payload.email) {
-        const isExist = yield admin_model_1.default.find({ email: payload.email });
-        if (isExist)
-            throw new ApiError_1.default(http_status_1.default.CONFLICT, 'Email is already in used');
     }
     const result = yield admin_model_1.default.findOneAndUpdate({ _id: id }, payload, {
         new: true,

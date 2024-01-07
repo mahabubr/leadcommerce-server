@@ -13,21 +13,15 @@ router.post(
   EmployeController.createEmploye
 );
 // update Employe
-router.patch(
-  '/update',
-
-  EmployeController.updateEmploye
-);
+router.put('/update', multer.single('image'), EmployeController.updateEmploye);
 // get single data from single Employe
 router.get(
   '/single',
-
   EmployeController.getSingleEmploye
 );
 // delete Employe
 router.delete(
   '/:id',
-
   EmployeController.deleteEmploye
 );
 // search and filter and get multiple data
